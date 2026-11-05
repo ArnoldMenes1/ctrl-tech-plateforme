@@ -574,11 +574,11 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 - [x] Endpoint technique `/api/health` ajouté.
 - [x] Catalogue initial repris du document fourni, avec prix indicatifs et sans disponibilité affirmée.
 - [ ] Validation métier CTRL-TECH (références, prix, stock, garanties, paiements, livraison et retours).
-- [ ] Configuration et vérification du projet Vercel / Preview.
+- [x] Projet Vercel `ctrl-tech-plateforme` lié au bon dépôt ; une Preview intermédiaire est prête. La dernière Preview attend le renouvellement de la limite quotidienne Vercel.
 - [x] Projet Neon créé (région AWS Europe West 2) avec branches `main` et `development`.
 - [x] Schéma catalogue initial appliqué sur `development`.
 - [ ] Migrations Drizzle automatisées et branche Preview isolée à finaliser.
-- [ ] Application Clerk et matrice RBAC.
+- [ ] Clés Clerk et vérification de session côté serveur ; provider frontend déjà préparé.
 - [ ] API métier, checkout sécurisé et back-office.
 - [ ] Tests E2E, recette et préparation Production.
 

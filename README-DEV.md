@@ -26,4 +26,4 @@ Le frontend ne se connecte jamais directement à PostgreSQL. Les endpoints méti
 
 ## Variables d'environnement
 
-Copier `.env.example` vers `.env.local` pour le développement. Ne jamais committer de secrets. Les clés privées doivent être configurées dans Vercel, côté serveur uniquement.
+Copier `.env.example` vers `.env.local` pour le développement. Ne jamais committer de secrets. Les clés privées doivent être configurées dans Vercel, côté serveur uniquement. `DATABASE_URL` est réservé au rôle applicatif ; `MIGRATION_DATABASE_URL` est réservé aux opérations de migration locales et ne doit pas être exposé dans Preview ou Production.

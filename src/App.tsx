@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, Route, Routes, useParams } from 'react-router-dom';
 import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Truck, Headphones, MapPin, Plus, SlidersHorizontal, Headphones as HeadphonesIcon, ArrowUpRight } from 'lucide-react';
 import { categories, formatPrice, products, type Product } from './catalog';
@@ -27,9 +27,39 @@ function Home({ onAdd }: {onAdd:(p:Product)=>void}) {
 }
 
 function Catalogue({ onAdd }: {onAdd:(p:Product)=>void}) {
-  const [query,setQuery]=useState(''); const [category,setCategory]=useState('Tout'); const [sort,setSort]=useState('featured');
-  const shown=useMemo(()=>products.filter(p=>(category==='Tout'||p.category===category)&&(`${p.name} ${p.brand}`.toLowerCase().includes(query.toLowerCase()))).sort((a,b)=>sort==='price-asc'?a.price-b.price:sort==='price-desc'?b.price-a.price:0),[query,category,sort]);
-  return <main className="container page-main"><div className="page-kicker">CTRL-TECH / CATALOGUE</div><div className="catalogue-title"><div><h1>Le catalogue <em>CTRL-TECH.</em></h1><p>Une sélection de technologies pour vos projets, votre travail et votre quotidien.</p></div><span>{shown.length} références de démonstration</span></div><div className="catalogue-tools"><div className="catalogue-search"><Search size={18}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un produit, une marque…"/></div><div className="filter-label"><SlidersHorizontal size={16}/> Filtrer</div><select value={category} onChange={e=>setCategory(e.target.value)} aria-label="Catégorie"><option>Tout</option>{categories.map(c=><option key={c.name}>{c.name}</option>)}</select><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Trier"><option value="featured">Trier par défaut</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option></select></div><div className="product-grid catalogue-grid">{shown.map(p=><ProductCard key={p.id} product={p} onAdd={onAdd}/>)}</div>{shown.length===0&&<div className="empty-state">Aucun produit ne correspond à cette recherche.</div>}<p className="catalogue-disclaimer">Catalogue de travail basé sur le document fourni. Les prix sont indicatifs ; disponibilité, configuration et conditions de vente doivent être confirmées par CTRL-TECH avant toute commande.</p></main>;
+  const [query,setQuery]=useState('');
+  const [category,setCategory]=useState('Tout');
+  const [sort,setSort]=useState('featured');
+  const [liveProducts,setLiveProducts]=useState<Product[]|null>(null);
+
+  useEffect(()=>{
+    let active=true;
+    fetch('/api/products')
+      .then((response)=>{if(!response.ok) throw new Error('Catalogue API unavailable');return response.json();})
+      .then((payload:{data?:Array<{id:string;name:string;description:string|null;brand:string|null;category:string|null;price:string|number;imageUrl:string|null;imageAlt:string|null}>})=>{
+        if(!active||!Array.isArray(payload.data)||payload.data.length===0)return;
+        const mapped:Product[]=payload.data.map((row)=>({
+          id:row.id,
+          name:row.name,
+          brand:row.brand||'CTRL-TECH',
+          category:row.category||'Accessoires',
+          price:Number(row.price),
+          description:row.description||'Fiche produit à compléter.',
+          specs:[],
+          image:row.imageUrl||categories.find((item)=>item.name===row.category)?.image||categories[0].image,
+        }));
+        if(active)setLiveProducts(mapped);
+      })
+      .catch(()=>{if(active)setLiveProducts(null);});
+    return ()=>{active=false;};
+  },[]);
+
+  const sourceProducts=liveProducts?.length?liveProducts:products;
+  const shown=useMemo(()=>sourceProducts
+    .filter((p)=>(category==='Tout'||p.category===category)&&(`${p.name} ${p.brand}`.toLowerCase().includes(query.toLowerCase())))
+    .sort((a,b)=>sort==='price-asc'?a.price-b.price:sort==='price-desc'?b.price-a.price:0),[sourceProducts,query,category,sort]);
+
+  return <main className="container page-main"><div className="page-kicker">CTRL-TECH / CATALOGUE</div><div className="catalogue-title"><div><h1>Le catalogue <em>CTRL-TECH.</em></h1><p>Une sélection de technologies pour vos projets, votre travail et votre quotidien.</p></div><span>{shown.length} références {liveProducts?.length?'publiées':'de démonstration'}</span></div><div className="catalogue-tools"><div className="catalogue-search"><Search size={18}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un produit, une marque…"/></div><div className="filter-label"><SlidersHorizontal size={16}/> Filtrer</div><select value={category} onChange={e=>setCategory(e.target.value)} aria-label="Catégorie"><option>Tout</option>{categories.map(c=><option key={c.name}>{c.name}</option>)}</select><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Trier"><option value="featured">Trier par défaut</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option></select></div><div className="product-grid catalogue-grid">{shown.map(p=><ProductCard key={p.id} product={p} onAdd={onAdd}/>)}</div>{shown.length===0&&<div className="empty-state">Aucun produit ne correspond à cette recherche.</div>}<p className="catalogue-disclaimer">Catalogue de travail basé sur le document fourni. Les prix sont indicatifs ; disponibilité, configuration et conditions de vente doivent être confirmées par CTRL-TECH avant toute commande.</p></main>;
 }
 
 function ProductDetail({onAdd}:{onAdd:(p:Product)=>void}) {

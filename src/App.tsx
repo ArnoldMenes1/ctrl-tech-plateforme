@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Route, Routes, useParams } from 'react-router-dom';
 import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Truck, Headphones, MapPin, Plus, SlidersHorizontal, Headphones as HeadphonesIcon, ArrowUpRight } from 'lucide-react';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { categories, formatPrice, products, type Product } from './catalog';
 
-function Header({ count }: { count:number }) {
+const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);\n\nfunction Header({ count }: { count:number }) {
   const [open,setOpen]=useState(false);
   return <header className="site-header"><div className="topline">L’exigence technologique, au cœur de Lubumbashi <span>•</span> Avenue Maniema</div><div className="nav-wrap container">
     <Link to="/" className="brand"><span className="brand-mark">C<span>T</span></span><span className="brand-name">CTRL<span>TECH</span><small>TECHNOLOGY STORE</small></span></Link>
     <nav className={open?'nav-links open':'nav-links'}><Link to="/catalogue" onClick={()=>setOpen(false)}>Catalogue</Link><a href="/#categories" onClick={()=>setOpen(false)}>Catégories</a><a href="/#about" onClick={()=>setOpen(false)}>Notre magasin</a><a href="/#contact" onClick={()=>setOpen(false)}>Contact</a></nav>
-    <div className="nav-actions"><Link to="/catalogue" className="search-action" aria-label="Rechercher"><Search size={19}/></Link><Link to="/panier" className="cart-action" aria-label="Panier"><ShoppingBag size={19}/><span>{count}</span></Link><button className="menu-toggle" onClick={()=>setOpen(!open)} aria-label="Ouvrir le menu">{open?<X/>:<Menu/>}</button></div>
+    <div className="nav-actions"><Link to="/catalogue" className="search-action" aria-label="Rechercher"><Search size={19}/></Link><Link to="/panier" className="cart-action" aria-label="Panier"><ShoppingBag size={19}/><span>{count}</span></Link>{clerkEnabled?<><SignedOut><SignInButton mode="modal"><button className="auth-trigger">Connexion</button></SignInButton></SignedOut><SignedIn><UserButton afterSignOutUrl="/"/></SignedIn></>:<span className="auth-placeholder" title="Connexion activée après configuration de Clerk">Espace client</span>}<button className="menu-toggle" onClick={()=>setOpen(!open)} aria-label="Ouvrir le menu">{open?<X/>:<Menu/>}</button></div>
   </div></header>;
 }
 

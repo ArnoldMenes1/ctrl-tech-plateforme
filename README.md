@@ -575,7 +575,9 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 - [x] Catalogue initial repris du document fourni, avec prix indicatifs et sans disponibilité affirmée.
 - [ ] Validation métier CTRL-TECH (références, prix, stock, garanties, paiements, livraison et retours).
 - [ ] Configuration et vérification du projet Vercel / Preview.
-- [ ] Projet Neon, branches et migrations Drizzle.
+- [x] Projet Neon créé (région AWS Europe West 2) avec branches `main` et `development`.
+- [x] Schéma catalogue initial appliqué sur `development`.
+- [ ] Migrations Drizzle automatisées et branche Preview isolée à finaliser.
 - [ ] Application Clerk et matrice RBAC.
 - [ ] API métier, checkout sécurisé et back-office.
 - [ ] Tests E2E, recette et préparation Production.

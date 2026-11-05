@@ -114,6 +114,7 @@
 | CT-020 | En cours | Endpoint public de lecture du catalogue ajouté ; validation et tests API à compléter |
 | CT-021 | En cours | Modèle d'inventaire défini ; mouvements et opérations métier à implémenter |
 | CT-022 | À faire | Instantané des lignes de commande à construire avec le module commandes |
+| CT-023 | En cours | Provider Clerk et actions de connexion intégrés ; clés et tests de session à configurer |
 
 Les autres stories restent à faire. Les états ci-dessus sont fondés sur les commits et ressources effectivement créés, pas sur une estimation.
 

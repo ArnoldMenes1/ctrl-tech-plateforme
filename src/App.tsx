@@ -4,7 +4,9 @@ import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Tr
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { categories, formatPrice, products, type Product } from './catalog';
 
-const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);\n\nfunction Header({ count }: { count:number }) {
+const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+
+function Header({ count }: { count:number }) {
   const [open,setOpen]=useState(false);
   return <header className="site-header"><div className="topline">L’exigence technologique, au cœur de Lubumbashi <span>•</span> Avenue Maniema</div><div className="nav-wrap container">
     <Link to="/" className="brand"><span className="brand-mark">C<span>T</span></span><span className="brand-name">CTRL<span>TECH</span><small>TECHNOLOGY STORE</small></span></Link>

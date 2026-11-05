@@ -99,6 +99,24 @@
 | CT-054 | 9 | Publier une release et préparer le rollback |
 | CT-055 | 9 | Mettre en place le monitoring post-lancement |
 
+## État réel de l'implémentation — 05 novembre 2026
+
+| Story | État | Preuve / limite |
+|---|---|---|
+| CT-012 | Terminé | React, TypeScript strict et Vite initialisés |
+| CT-013 | En cours | Frontend et API séparés ; packages partagés à structurer |
+| CT-014 | Terminé | ESLint, TypeScript, Vitest et scripts de build configurés |
+| CT-015 | En cours | Projet Vercel lié au dépôt ; première Preview prête, dernière version en construction |
+| CT-016 | Terminé | GitHub Actions : typecheck, lint, tests et build validés sur le premier socle |
+| CT-017 | En cours | Projet Neon créé ; branches `main` et `development`, isolation Preview à finaliser |
+| CT-018 | Terminé | Schéma initial catalogue, variantes, médias et inventaire créé |
+| CT-019 | En cours | Migration SQL versionnée et appliquée sur la branche development ; journal de migrations à formaliser |
+| CT-020 | En cours | Endpoint public de lecture du catalogue ajouté ; validation et tests API à compléter |
+| CT-021 | En cours | Modèle d'inventaire défini ; mouvements et opérations métier à implémenter |
+| CT-022 | À faire | Instantané des lignes de commande à construire avec le module commandes |
+
+Les autres stories restent à faire. Les états ci-dessus sont fondés sur les commits et ressources effectivement créés, pas sur une estimation.
+
 ## Definition of Done
 
 Une story est terminée lorsque :

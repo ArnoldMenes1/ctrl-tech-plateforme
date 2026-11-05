@@ -78,7 +78,16 @@ function Cart({items,onRemove}:{items:Product[];onRemove:(id:string)=>void}) {
 function Footer(){return <footer className="footer"><div className="container footer-main"><div className="brand footer-brand"><span className="brand-mark">C<span>T</span></span><span className="brand-name">CTRL<span>TECH</span><small>TECHNOLOGY STORE</small></span></div><p>La technologie, bien choisie.<br/>Votre univers électronique à Lubumbashi.</p><div className="footer-links"><Link to="/catalogue">Catalogue</Link><a href="/#about">Le magasin</a><a href="/#contact">Contact</a></div><div className="footer-location"><MapPin size={17}/> Avenue Maniema, Lubumbashi</div></div><div className="container footer-bottom"><span>© 2026 CTRL-TECH. Tous droits réservés.</span><span>Catalogue indicatif · Informations à confirmer en magasin</span></div></footer>}
 
 export default function App(){
-  const [cart,setCart]=useState<Product[]>([]);
+  const [cart,setCart]=useState<Product[]>(()=>{
+    try {
+      const stored=window.localStorage.getItem('ctrl-tech-cart');
+      const parsed=stored?JSON.parse(stored):[];
+      return Array.isArray(parsed)?parsed.filter((item)=>item&&typeof item.id==='string'):[];
+    } catch {
+      return [];
+    }
+  });
+  useEffect(()=>{window.localStorage.setItem('ctrl-tech-cart',JSON.stringify(cart));},[cart]);
   const add=(p:Product)=>setCart(old=>[...old,p]);
   const remove=(id:string)=>{let removed=false;setCart(old=>old.filter(p=>{if(p.id===id&&!removed){removed=true;return false;}return true;}));};
   return <><Header count={cart.length}/><Routes><Route path="/" element={<Home onAdd={add}/>}/><Route path="/catalogue" element={<Catalogue onAdd={add}/>}/><Route path="/produit/:id" element={<ProductDetail onAdd={add}/>}/><Route path="/panier" element={<Cart items={cart} onRemove={remove}/>}/><Route path="*" element={<main className="container page-main empty-state"><h1>404</h1><p>Cette page n’existe pas.</p><Link to="/">Retour à l’accueil</Link></main>}/></Routes><Footer/></>;

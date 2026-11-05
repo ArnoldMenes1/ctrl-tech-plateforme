@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, Route, Routes, useParams } from 'react-router-dom';
-import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Truck, Headphones, MapPin, Plus, Minus, SlidersHorizontal, Smartphone, Laptop, Tablet, Headphones as HeadphonesIcon, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Truck, Headphones, MapPin, Plus, SlidersHorizontal, Headphones as HeadphonesIcon, ArrowUpRight } from 'lucide-react';
 import { categories, formatPrice, products, type Product } from './catalog';
 
 function Header({ count }: { count:number }) {

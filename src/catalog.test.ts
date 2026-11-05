@@ -5,7 +5,7 @@ describe('catalogue CTRL-TECH', () => {
   it('expose des références avec identifiants uniques et prix positifs', () => {
     const ids = products.map((product) => product.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(products.length).toBeGreaterThan(10);
+    expect(products.length).toBe(52);
     expect(products.every((product) => product.price > 0)).toBe(true);
   });
 

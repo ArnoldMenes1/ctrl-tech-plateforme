@@ -1,4 +1,4 @@
-import { boolean, check, index, integer, jsonb, numeric, pgTable, text, timestamp, uniqueIndex, uuid, varchar, pgEnum } from 'drizzle-orm/pg-core';
+import { boolean, check, index, integer, jsonb, numeric, pgTable, text, timestamp, uniqueIndex, uuid, varchar, pgEnum, type AnyPgColumn } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const productStatus = pgEnum('product_status', ['draft', 'published', 'archived']);
@@ -13,7 +13,7 @@ export const brands = pgTable('brands', {
 
 export const categories = pgTable('categories', {
   id: uuid('id').defaultRandom().primaryKey(),
-  parentId: uuid('parent_id'),
+  parentId: uuid('parent_id').references((): AnyPgColumn => categories.id, { onDelete: 'set null' }),
   name: varchar('name', { length: 120 }).notNull(),
   slug: varchar('slug', { length: 140 }).notNull(),
   description: text('description'),

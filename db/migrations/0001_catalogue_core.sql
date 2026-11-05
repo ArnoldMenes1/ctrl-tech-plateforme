@@ -1,15 +1,26 @@
-CREATE TYPE product_status AS ENUM ('draft', 'published', 'archived');
-CREATE TYPE inventory_movement_type AS ENUM ('receipt', 'sale', 'reservation', 'release', 'adjustment', 'return');
+DO $$ BEGIN
+  CREATE TYPE product_status AS ENUM ('draft', 'published', 'archived');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE TABLE brands (
+--> statement-breakpoint
+DO $$ BEGIN
+  CREATE TYPE inventory_movement_type AS ENUM ('receipt', 'sale', 'reservation', 'release', 'adjustment', 'return');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS brands (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name varchar(120) NOT NULL,
   slug varchar(140) NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE UNIQUE INDEX brands_slug_uq ON brands(slug);
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS brands_slug_uq ON brands(slug);
 
-CREATE TABLE categories (
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS categories (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   parent_id uuid REFERENCES categories(id) ON DELETE SET NULL,
   name varchar(120) NOT NULL,
@@ -19,10 +30,13 @@ CREATE TABLE categories (
   is_active boolean NOT NULL DEFAULT true,
   created_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE UNIQUE INDEX categories_slug_uq ON categories(slug);
-CREATE INDEX categories_parent_idx ON categories(parent_id);
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS categories_slug_uq ON categories(slug);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS categories_parent_idx ON categories(parent_id);
 
-CREATE TABLE products (
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS products (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   brand_id uuid REFERENCES brands(id) ON DELETE SET NULL,
   category_id uuid REFERENCES categories(id) ON DELETE SET NULL,
@@ -34,12 +48,17 @@ CREATE TABLE products (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE UNIQUE INDEX products_slug_uq ON products(slug);
-CREATE INDEX products_status_idx ON products(status);
-CREATE INDEX products_category_idx ON products(category_id);
-CREATE INDEX products_brand_idx ON products(brand_id);
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS products_slug_uq ON products(slug);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS products_status_idx ON products(status);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS products_category_idx ON products(category_id);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS products_brand_idx ON products(brand_id);
 
-CREATE TABLE product_variants (
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS product_variants (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id uuid NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   sku varchar(80) NOT NULL,
@@ -50,10 +69,13 @@ CREATE TABLE product_variants (
   is_active boolean NOT NULL DEFAULT true,
   created_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE UNIQUE INDEX product_variants_sku_uq ON product_variants(sku);
-CREATE INDEX product_variants_product_idx ON product_variants(product_id);
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS product_variants_sku_uq ON product_variants(sku);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS product_variants_product_idx ON product_variants(product_id);
 
-CREATE TABLE product_images (
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS product_images (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id uuid NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   variant_id uuid REFERENCES product_variants(id) ON DELETE CASCADE,
@@ -63,9 +85,11 @@ CREATE TABLE product_images (
   is_primary boolean NOT NULL DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE INDEX product_images_product_idx ON product_images(product_id);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS product_images_product_idx ON product_images(product_id);
 
-CREATE TABLE inventory_items (
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS inventory_items (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   variant_id uuid NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
   quantity_on_hand integer NOT NULL DEFAULT 0 CHECK (quantity_on_hand >= 0),
@@ -74,9 +98,11 @@ CREATE TABLE inventory_items (
   updated_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT inventory_reserved_lte_on_hand CHECK (quantity_reserved <= quantity_on_hand)
 );
-CREATE UNIQUE INDEX inventory_items_variant_uq ON inventory_items(variant_id);
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS inventory_items_variant_uq ON inventory_items(variant_id);
 
-CREATE TABLE inventory_movements (
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS inventory_movements (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   inventory_item_id uuid NOT NULL REFERENCES inventory_items(id) ON DELETE CASCADE,
   type inventory_movement_type NOT NULL,
@@ -85,4 +111,5 @@ CREATE TABLE inventory_movements (
   actor_clerk_id varchar(160),
   created_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE INDEX inventory_movements_item_created_idx ON inventory_movements(inventory_item_id, created_at);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS inventory_movements_item_created_idx ON inventory_movements(inventory_item_id, created_at);

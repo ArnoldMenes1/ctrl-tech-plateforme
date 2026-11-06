@@ -24,17 +24,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .topline{min-height:34px;padding:7px 20px;background:var(--graphite);color:#E9E7E0;text-align:center;font-size:11px;letter-spacing:.07em;display:flex;align-items:center;justify-content:center;gap:10px}
 .topline span{color:var(--signal)}
 .site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(20,35,43,.09)}
-.nav-wrap{height:86px;display:flex;align-items:center;justify-content:space-between;gap:28px}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-wrap{height:86px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;justify-self:start;gap:10px;min-width:0;flex:0 0 auto}
 .brand-logo{display:block;width:184px;height:auto;max-height:54px;object-fit:contain;object-position:left center}
 .brand-symbol{display:none;width:42px;height:42px;object-fit:contain}
-.brand-home-icon{display:block;width:48px;height:48px;object-fit:contain;flex:0 0 auto}
-.nav-links{display:flex;align-items:center;gap:clamp(20px,3vw,42px);font-size:13px;font-weight:600;color:#4D5A5E}
+.brand-home-icon{display:block;width:46px;height:46px;object-fit:contain;object-position:left center;flex:0 0 auto}
+.nav-links{display:flex;align-items:center;justify-self:center;gap:clamp(20px,3vw,42px);font-size:13px;font-weight:600;color:#4D5A5E}
 .nav-links a{position:relative;padding:12px 0;transition:color .16s ease}
 .nav-links a:after{content:'';position:absolute;left:0;right:100%;bottom:5px;height:2px;background:var(--signal);transition:right .18s ease}
 .nav-links a:hover{color:var(--graphite)}
 .nav-links a:hover:after{right:0}
-.nav-actions{display:flex;align-items:center;gap:20px}
+.nav-actions{display:flex;align-items:center;justify-self:end;gap:20px}
 .search-action,.cart-action{position:relative;display:grid;place-items:center;width:42px;height:42px;color:var(--graphite);border-radius:var(--radius-sm);transition:background .16s ease,color .16s ease}
 .search-action:hover,.cart-action:hover{background:var(--ivory);color:var(--signal)}
 .cart-action span{position:absolute;top:1px;right:0;min-width:18px;height:18px;padding:0 4px;background:var(--signal);color:white;border-radius:99px;font:500 10px 'IBM Plex Mono';display:grid;place-items:center}

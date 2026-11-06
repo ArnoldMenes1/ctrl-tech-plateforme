@@ -585,19 +585,26 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 
 ---
 
-## 17. État initial du projet
+## 17. État du projet
 
-**Statut :** cadrage technique documenté — implémentation à démarrer.
+**Statut :** socle frontend initialisé — intégrations et validation métier à poursuivre.
 
-- [x] Dépôt GitHub identifié.
-- [x] README de planification initialisé.
-- [x] Stack cible définie.
-- [x] Architecture logique définie.
-- [x] Phases et critères MVP documentés.
-- [ ] Validation métier CTRL-TECH.
-- [ ] Configuration Vercel.
-- [ ] Projet Neon et branches.
-- [ ] Application Clerk.
-- [ ] Initialisation du code et première Preview.
+- [x] Dépôt GitHub identifié et backlog Scrum documenté.
+- [x] Stack cible et architecture logique définies.
+- [x] React + TypeScript + Vite initialisés sur `feat/storefront-foundation`.
+- [x] Accueil responsive, navigation, catalogue de démonstration, fiche produit et panier local.
+- [x] Contrôles qualité CI ajoutés (typecheck, lint, tests, build) ; exécution distante à confirmer sur la PR.
+- [x] Endpoint technique `/api/health` ajouté.
+- [x] Catalogue initial repris du document fourni, avec prix indicatifs et sans disponibilité affirmée.
+- [ ] Validation métier CTRL-TECH (références, prix, stock, garanties, paiements, livraison et retours).
+- [x] Projet Vercel `ctrl-tech-plateforme` lié au bon dépôt ; une Preview intermédiaire est prête. La dernière Preview attend le renouvellement de la limite quotidienne Vercel.
+- [x] Projet Neon créé (région AWS Europe West 2) avec branches `main` et `development`.
+- [x] Schéma catalogue initial appliqué sur `development`.
+- [ ] Migrations Drizzle automatisées et branche Preview isolée à finaliser.
+- [ ] Clés Clerk et vérification de session côté serveur ; provider frontend déjà préparé.
+- [ ] API métier, checkout sécurisé et back-office.
+- [ ] Tests E2E, recette et préparation Production.
+
+**Limites actuelles :** le panier est local au navigateur et ne crée aucune commande. Les visuels sont temporaires. Aucun paiement, stock réel, compte client, garantie contractuelle ou livraison n'est activé.
 
 **Règle de progression :** avancer phase par phase, vérifier le résultat réel après chaque étape et ne déclarer une tâche terminée que lorsque le changement est présent dans le dépôt ou l'environnement concerné et a été vérifié.

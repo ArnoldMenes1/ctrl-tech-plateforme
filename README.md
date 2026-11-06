@@ -8,13 +8,17 @@ Plateforme e-commerce officielle de CTRL-TECH, magasin de produits électronique
 
 ## Liens de travail — Preview équipe
 
-- **Aperçu public de la branche `feat/storefront-foundation` :** https://ctrl-tech-plateforme-i5jumfi9b-menesmva-9298s-projects.vercel.app?_vercel_share=NkotQvgvACkA0emQhrgZx098fnrY2WZN
-- **Historique des déploiements Vercel :** https://vercel.com/menesmva-9298s-projects/ctrl-tech-plateforme/deployments
-- **Branche source :** https://github.com/ArnoldMenes1/ctrl-tech-plateforme/tree/feat/storefront-foundation
+- **Projet Vercel / accès aux previews :** https://vercel.com/menesmva-9298s-projects/ctrl-tech-plateforme
+- **Historique des déploiements :** https://vercel.com/menesmva-9298s-projects/ctrl-tech-plateforme/deployments
+- **Dernière Preview publique vérifiée — branche `feat/storefront-foundation` :** https://ctrl-tech-plateforme-i5jumfi9b-menesmva-9298s-projects.vercel.app?_vercel_share=NkotQvgvACkA0emQhrgZx098fnrY2WZN
+- **Code de la dernière évolution frontend :** https://github.com/ArnoldMenes1/ctrl-tech-plateforme/tree/feat/complete-frontend-interfaces
+- **Pull Request frontend :** https://github.com/ArnoldMenes1/ctrl-tech-plateforme/pull/4
 
-Le lien Preview utilise un accès partageable Vercel pour contourner la protection SSO de l'environnement Preview. Toute personne qui possède ce lien peut consulter cette version ; partage-le uniquement avec les personnes concernées. Le dépôt GitHub étant privé, l'accès au code reste soumis aux permissions GitHub.
+> **État du Preview de la dernière branche :** la branche `feat/complete-frontend-interfaces` n'a pas encore d'URL Preview confirmée. La création du déploiement Vercel a été refusée par la limite de déploiements API du plan Hobby. Utiliser le projet et l'historique Vercel ci-dessus pour retrouver les déploiements disponibles ; ne pas considérer l'ancienne URL Preview comme la version des dernières interfaces.
 
-Chaque nouveau commit poussé sur une branche connectée à Vercel crée une nouvelle Preview. Les déploiements restent consultables dans l'historique Vercel et peuvent être ouverts individuellement pour comparer les versions ou revenir à un état antérieur.
+Le lien Preview public ci-dessus concerne uniquement la branche `feat/storefront-foundation`. Il utilise un accès partageable Vercel : toute personne qui possède ce lien peut consulter cette version ; partage-le uniquement avec les personnes concernées. Le dépôt GitHub étant privé, l'accès au code reste soumis aux permissions GitHub.
+
+Chaque nouveau commit poussé sur une branche connectée à Vercel peut créer une nouvelle Preview selon la configuration et les limites du compte. Les déploiements disponibles restent consultables dans l'historique Vercel.
 
 ---
 

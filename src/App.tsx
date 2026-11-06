@@ -4,7 +4,7 @@ import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Tr
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { categories, formatPrice, products, type Product } from './catalog';
 import { fetchCatalogueProducts, isUuid } from './catalog-api';
-import { ExtendedRoutes } from './extended-pages';
+import { AccountPage, AdminClients, AdminDashboard, AdminOrders, AdminProducts, AdminSettings, AdminStock, CheckoutPage, HelpPage, InfoPage, OrderDetailPage, OrdersPage } from './extended-pages';
 
 const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
@@ -138,5 +138,5 @@ export default function App(){
   useEffect(()=>{window.localStorage.setItem('ctrl-tech-cart',JSON.stringify(cart));},[cart]);
   const add=(p:Product)=>setCart(old=>[...old,p]);
   const remove=(id:string)=>{let removed=false;setCart(old=>old.filter(p=>{if(p.id===id&&!removed){removed=true;return false;}return true;}));};
-  return <><Header count={cart.length}/><Routes><Route path="/" element={<Home onAdd={add}/>}/><Route path="/catalogue" element={<Catalogue onAdd={add}/>}/><Route path="/produit/:id" element={<ProductDetail onAdd={add}/>}/><Route path="/panier" element={<Cart items={cart} onRemove={remove}/>}/><Route path="*" element={<main className="container page-main empty-state"><h1>404</h1><p>Cette page n’existe pas.</p><Link to="/">Retour à l’accueil</Link></main>}/></Routes><ExtendedRoutes/><Footer/></>;
+  return <><Header count={cart.length}/><Routes><Route path="/" element={<Home onAdd={add}/>}/><Route path="/catalogue" element={<Catalogue onAdd={add}/>}/><Route path="/produit/:id" element={<ProductDetail onAdd={add}/>}/><Route path="/panier" element={<Cart items={cart} onRemove={remove}/>}/><Route path="/commande" element={<CheckoutPage/>}/><Route path="/compte" element={<AccountPage/>}/><Route path="/compte/commandes" element={<OrdersPage/>}/><Route path="/compte/commandes/:id" element={<OrderDetailPage/>}/><Route path="/aide" element={<HelpPage/>}/><Route path="/conditions" element={<InfoPage kind="conditions"/>}/><Route path="/livraison-retours" element={<InfoPage kind="livraison"/>}/><Route path="/confidentialite" element={<InfoPage kind="confidentialite"/>}/><Route path="/admin" element={<AdminDashboard/>}/><Route path="/admin/produits" element={<AdminProducts/>}/><Route path="/admin/commandes" element={<AdminOrders/>}/><Route path="/admin/stocks" element={<AdminStock/>}/><Route path="/admin/clients" element={<AdminClients/>}/><Route path="/admin/parametres" element={<AdminSettings/>}/><Route path="*" element={<main className="container page-main empty-state"><h1>404</h1><p>Cette page n’existe pas.</p><Link to="/">Retour à l’accueil</Link></main>}/></Routes><Footer/></>;
 }

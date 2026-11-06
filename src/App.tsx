@@ -9,7 +9,7 @@ const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 function Header({ count }: { count:number }) {
   const [open,setOpen]=useState(false);
   return <header className="site-header"><div className="topline">L’exigence technologique, au cœur de Lubumbashi <span>•</span> Avenue Maniema</div><div className="nav-wrap container">
-    <Link to="/" className="brand"><img className="brand-logo" src="/brand/logo-full.png" alt="CTRL-TECH — Precision in Technology" /><img className="brand-symbol" src="/brand/ctrl-tech-icon.png" alt="" aria-hidden="true" /></Link>
+    <Link to="/" className="brand" aria-label="CTRL-TECH — Accueil"><img className="brand-home-icon" src="/brand/ctrl-tech-icon.png" alt="CTRL-TECH" /></Link>
     <nav className={open?'nav-links open':'nav-links'}><Link to="/catalogue" onClick={()=>setOpen(false)}>Catalogue</Link><a href="/#categories" onClick={()=>setOpen(false)}>Catégories</a><a href="/#about" onClick={()=>setOpen(false)}>Notre magasin</a><a href="/#contact" onClick={()=>setOpen(false)}>Contact</a></nav>
     <div className="nav-actions"><Link to="/catalogue" className="search-action" aria-label="Rechercher"><Search size={19}/></Link><Link to="/panier" className="cart-action" aria-label="Panier"><ShoppingBag size={19}/><span>{count}</span></Link>{clerkEnabled?<><SignedOut><SignInButton mode="modal"><button className="auth-trigger">Connexion</button></SignInButton></SignedOut><SignedIn><UserButton afterSignOutUrl="/"/></SignedIn></>:<span className="auth-placeholder" title="Connexion activée après configuration de Clerk">Espace client</span>}<button className="menu-toggle" onClick={()=>setOpen(!open)} aria-label="Ouvrir le menu">{open?<X/>:<Menu/>}</button></div>
   </div></header>;

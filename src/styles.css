@@ -546,3 +546,7 @@ h1 em, h2 em { color: var(--signal); font-style: normal; }
 .price-filter { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
 .price-filter input { width:100%; min-width:0; height:40px; padding:0 9px; border:1px solid var(--line); border-radius:var(--radius-sm); background:rgba(255,255,255,.7); color:var(--graphite); font-size:10px; }
 .price-filter input:focus { border-color:var(--signal); outline:0; box-shadow:0 0 0 3px rgba(217,107,69,.12); }
+
+.compare-trigger span { position:absolute; top:1px; right:0; min-width:17px; height:17px; padding:0 4px; display:grid; place-items:center; border-radius:20px; background:var(--champagne); color:var(--graphite); font:500 9px 'IBM Plex Mono'; }
+.compare-feedback { position:absolute; z-index:60; top:100%; right:max(24px,calc((100vw - var(--content))/2)); max-width:min(360px,calc(100vw - 32px)); padding:11px 15px; border:1px solid rgba(20,35,43,.12); border-radius:var(--radius-sm); background:rgba(250,249,245,.97); box-shadow:var(--shadow-soft); color:var(--graphite); font-size:11px; }
+@media (max-width:767px) { .compare-feedback { right:18px; } }

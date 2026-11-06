@@ -8,7 +8,7 @@ Plateforme e-commerce officielle de CTRL-TECH, magasin de produits électronique
 
 ## Liens de travail — Preview équipe
 
-- **Aperçu public de la branche `feat/storefront-foundation` :** https://ctrl-tech-plateforme-6ycwqck9m-menesmva-9298s-projects.vercel.app?_vercel_share=1BrRU8GdASNvrkfJGDJiNTYyOrjigzZW
+- **Aperçu public de la branche `feat/storefront-foundation` :** https://ctrl-tech-plateforme-qxxdc2z4k-menesmva-9298s-projects.vercel.app?_vercel_share=wPsjmDsJUI9zG64XqBrApeTZBh0OHye9
 - **Historique des déploiements Vercel :** https://vercel.com/menesmva-9298s-projects/ctrl-tech-plateforme/deployments
 - **Branche source :** https://github.com/ArnoldMenes1/ctrl-tech-plateforme/tree/feat/storefront-foundation
 

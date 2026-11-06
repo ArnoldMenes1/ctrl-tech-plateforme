@@ -429,3 +429,35 @@ h1 em, h2 em { color: var(--signal); font-style: normal; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Brand directory and product comparison — Screen Specification P05 */
+.compare-icon { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: transparent; color: var(--graphite); }
+.compare-icon:hover, .detail-compare:hover { border-color: var(--signal); color: var(--signal); }
+.detail-compare { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; margin: 0 0 15px; padding: 0 13px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: transparent; color: var(--graphite); font-size: 11px; font-weight: 700; }
+.brand-directory { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.brand-directory > a { min-height: 94px; display: grid; grid-template-columns: 46px minmax(0,1fr) auto; grid-template-rows: auto auto; align-items: center; gap: 4px 14px; padding: 17px; border: 1px solid var(--line); border-radius: var(--radius-md); background: rgba(255,255,255,.56); transition: border-color .16s, transform .16s, background .16s; }
+.brand-directory > a:hover { transform: translateY(-2px); border-color: var(--signal); background: white; }
+.brand-directory > a > span { grid-row: 1 / 3; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--graphite); color: white; font: 500 12px 'IBM Plex Mono'; }
+.brand-directory > a > b { align-self: end; font: 600 15px 'Space Grotesk'; }
+.brand-directory > a > small { align-self: start; color: var(--titanium); font-size: 10px; }
+.brand-directory > a > svg { grid-column: 3; grid-row: 1 / 3; color: var(--signal); }
+.compare-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-md); background: white; }
+.compare-table { width: 100%; min-width: 650px; border-collapse: collapse; text-align: left; }
+.compare-table th, .compare-table td { min-width: 175px; padding: 16px; border-bottom: 1px solid #ECEBE6; vertical-align: top; font-size: 11px; line-height: 1.6; }
+.compare-table thead th { background: #F8F7F2; }
+.compare-table thead th:first-child, .compare-table tbody th { min-width: 145px; width: 145px; color: var(--titanium); font: 500 10px 'IBM Plex Mono'; text-transform: uppercase; letter-spacing: .05em; }
+.compare-product { display: grid; justify-items: start; gap: 9px; }
+.compare-product img { width: 100%; height: 115px; object-fit: contain; mix-blend-mode: multiply; }
+.compare-product b { font: 600 13px 'Space Grotesk'; }
+.compare-product button { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: var(--signal); font-size: 10px; }
+.compare-add-cell { min-width: 170px; }
+.compare-add-cell a { min-height: 115px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px dashed #BFC6C1; border-radius: var(--radius-sm); color: var(--titanium); font-size: 11px; }
+.compare-add-cell a:hover { border-color: var(--signal); color: var(--signal); }
+@media (max-width: 767px) {
+  .brand-directory { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+  .brand-directory > a { min-height: 84px; grid-template-columns: 36px minmax(0,1fr) auto; gap: 4px 9px; padding: 12px; }
+  .brand-directory > a > span { width: 35px; height: 35px; font-size: 10px; }
+  .brand-directory > a > b { font-size: 12px; }
+  .brand-directory > a > small { font-size: 9px; }
+  .compare-icon { width: 30px; height: 34px; }
+}

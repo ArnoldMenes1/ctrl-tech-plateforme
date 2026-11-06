@@ -137,7 +137,9 @@ Créer une identité e-commerce technologique, premium, claire et crédible, san
 - États de chargement, erreurs, succès, rupture et indisponibilité conçus dès le départ.
 - Contraste WCAG 2.2 AA visé, navigation clavier et libellés accessibles.
 
-Références UX : `docs/design/DESIGN-SYSTEM.md` (Precision Retail V2), `docs/product/SCREEN-SPECIFICATION.md` et `docs/product/UX-DECISIONS.md`.\n\n### Parcours et pages publiques
+Références UX : `docs/design/DESIGN-SYSTEM.md` (Precision Retail V2), `docs/product/SCREEN-SPECIFICATION.md` et `docs/product/UX-DECISIONS.md`.
+
+### Parcours et pages publiques
 
 - Accueil éditorial : hero, réassurance confirmée, univers produits, sélection, focus marques, nouveautés, segment professionnel, accessoires et magasin.
 - Catalogue : grille produits, recherche, filtres, tri, pagination.

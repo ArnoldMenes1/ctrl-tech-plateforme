@@ -130,25 +130,25 @@ La structure finale peut être ajustée au premier commit technique, mais les fr
 Créer une identité e-commerce technologique, premium, claire et crédible, sans tomber dans un style cyberpunk ou une interface surchargée.
 
 - Interface lumineuse, hiérarchie typographique nette et espaces généreux.
-- Palette à valider avec CTRL-TECH ; proposition initiale : bleu nuit, bleu électrique, blanc cassé et gris neutres.
-- Typographie sans-serif moderne et lisible.
+- Palette validée : Graphite `#14232B`, Ivoire `#F3F0E8`, Orange signal `#D96B45`, Sauge `#B9C9B8`, Blanc `#FFFFFF`, Titane `#69777B` et Champagne `#E8C77A`.
+- Typographies : Space Grotesk pour les titres, Instrument Sans pour l’interface et IBM Plex Mono pour les données techniques.
 - Photographies produits homogènes, haute résolution, cadrage cohérent.
 - Animations discrètes, rapides et utiles ; respecter `prefers-reduced-motion`.
 - États de chargement, erreurs, succès, rupture et indisponibilité conçus dès le départ.
 - Contraste WCAG 2.2 AA visé, navigation clavier et libellés accessibles.
 
-### Parcours et pages publiques
+Références UX : `docs/design/DESIGN-SYSTEM.md` (Precision Retail V2), `docs/product/SCREEN-SPECIFICATION.md` et `docs/product/UX-DECISIONS.md`.\n\n### Parcours et pages publiques
 
-- Accueil : proposition de valeur, catégories, nouveautés, sélections et promotions validées.
+- Accueil éditorial : hero, réassurance confirmée, univers produits, sélection, focus marques, nouveautés, segment professionnel, accessoires et magasin.
 - Catalogue : grille produits, recherche, filtres, tri, pagination.
-- Catégories et marques.
+- Pages catégories, sous-catégories et marques.
 - Fiche produit : galerie, caractéristiques, prix, disponibilité, garantie, livraison et produits associés.
-- Comparateur de produits (phase ultérieure si prioritaire).
+- Comparateur de produits limité à trois références d’une même famille.
 - Panier persistant.
 - Checkout : coordonnées, livraison/retrait, mode de paiement confirmé, récapitulatif.
 - Confirmation et suivi de commande.
 - À propos, contact, localisation, FAQ, politique de confidentialité, conditions de vente, livraison/retours et garantie.
-- Compte client : profil, adresses, commandes et préférences.
+- Compte client : vue d’ensemble, commandes, informations et sécurité (activation backend à finaliser).
 - Pages 404 et erreurs réseau.
 
 ### Responsive
@@ -564,13 +564,13 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 
 ## 17. État du projet
 
-**Statut :** socle frontend initialisé — intégrations et validation métier à poursuivre.
+**Statut :** frontend storefront refondu selon Precision Retail V2 — intégrations, QA visuelle et validation métier à poursuivre.
 
 - [x] Dépôt GitHub identifié et backlog Scrum documenté.
 - [x] Stack cible et architecture logique définies.
 - [x] React + TypeScript + Vite initialisés sur `feat/storefront-foundation`.
-- [x] Accueil responsive, navigation, catalogue de démonstration, fiche produit et panier local.
-- [x] Contrôles qualité CI ajoutés (typecheck, lint, tests, build) ; exécution distante à confirmer sur la PR.
+- [x] Shell public responsive, accueil éditorial, catalogue filtrable, catégories, marques, fiches produit, comparateur, panier et pages institutionnelles.
+- [x] Contrôles qualité CI présents ; le dernier passage doit être confirmé après la refonte.
 - [x] Endpoint technique `/api/health` ajouté.
 - [x] Catalogue initial repris du document fourni, avec prix indicatifs et sans disponibilité affirmée.
 - [ ] Validation métier CTRL-TECH (références, prix, stock, garanties, paiements, livraison et retours).
@@ -582,6 +582,6 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 - [ ] API métier, checkout sécurisé et back-office.
 - [ ] Tests E2E, recette et préparation Production.
 
-**Limites actuelles :** le panier est local au navigateur et ne crée aucune commande. Les visuels sont temporaires. Aucun paiement, stock réel, compte client, garantie contractuelle ou livraison n'est activé.
+**Limites actuelles :** le panier et le comparateur sont locaux au navigateur. Les visuels sont temporaires. Checkout, confirmation réelle, suivi, modules opérationnels du back-office, stock et paiements ne sont pas activés. Les coordonnées, garanties et modalités de livraison restent à valider.
 
 **Règle de progression :** avancer phase par phase, vérifier le résultat réel après chaque étape et ne déclarer une tâche terminée que lorsque le changement est présent dans le dépôt ou l'environnement concerné et a été vérifié.

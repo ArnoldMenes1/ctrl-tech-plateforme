@@ -3,6 +3,7 @@ import { Link, Route, Routes, useParams } from 'react-router-dom';
 import { ArrowRight, Search, ShoppingBag, Menu, X, ChevronRight, ShieldCheck, Truck, Headphones, MapPin, Plus, SlidersHorizontal, Headphones as HeadphonesIcon, ArrowUpRight } from 'lucide-react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { categories, formatPrice, products, type Product } from './catalog';
+import { fetchCatalogueProducts, isUuid } from './catalog-api';
 
 const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
@@ -10,8 +11,8 @@ function Header({ count }: { count:number }) {
   const [open,setOpen]=useState(false);
   return <header className="site-header"><div className="topline">L’exigence technologique, au cœur de Lubumbashi <span>•</span> Avenue Maniema</div><div className="nav-wrap container">
     <Link to="/" className="brand" aria-label="CTRL-TECH — Accueil"><img className="brand-home-icon" src="/brand/ctrl-tech-icon.png" alt="CTRL-TECH" /></Link>
-    <nav className={open?'nav-links open':'nav-links'}><Link to="/catalogue" onClick={()=>setOpen(false)}>Catalogue</Link><a href="/#categories" onClick={()=>setOpen(false)}>Catégories</a><a href="/#about" onClick={()=>setOpen(false)}>Notre magasin</a><a href="/#contact" onClick={()=>setOpen(false)}>Contact</a></nav>
-    <div className="nav-actions"><Link to="/catalogue" className="search-action" aria-label="Rechercher"><Search size={19}/></Link><Link to="/panier" className="cart-action" aria-label="Panier"><ShoppingBag size={19}/><span>{count}</span></Link>{clerkEnabled?<><SignedOut><SignInButton mode="modal"><button className="auth-trigger">Connexion</button></SignInButton></SignedOut><SignedIn><UserButton afterSignOutUrl="/"/></SignedIn></>:<span className="auth-placeholder" title="Connexion activée après configuration de Clerk">Espace client</span>}<button className="menu-toggle" onClick={()=>setOpen(!open)} aria-label="Ouvrir le menu">{open?<X/>:<Menu/>}</button></div>
+    <nav id="primary-navigation" className={open?'nav-links open':'nav-links'} aria-label="Navigation principale"><Link to="/catalogue" onClick={()=>setOpen(false)}>Catalogue</Link><a href="/#categories" onClick={()=>setOpen(false)}>Catégories</a><a href="/#about" onClick={()=>setOpen(false)}>Notre magasin</a><a href="/#contact" onClick={()=>setOpen(false)}>Contact</a></nav>
+    <div className="nav-actions"><Link to="/catalogue" className="search-action" aria-label="Rechercher"><Search size={19}/></Link><Link to="/panier" className="cart-action" aria-label="Panier"><ShoppingBag size={19}/><span aria-hidden="true">{count}</span></Link>{clerkEnabled?<><SignedOut><SignInButton mode="modal"><button className="auth-trigger">Connexion</button></SignInButton></SignedOut><SignedIn><UserButton afterSignOutUrl="/"/></SignedIn></>:<span className="auth-placeholder" title="Connexion activée après configuration de Clerk">Espace client</span>}<button className="menu-toggle" onClick={()=>setOpen(!open)} aria-label={open ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={open} aria-controls="primary-navigation">{open?<X/>:<Menu/>}</button></div>
   </div></header>;
 }
 
@@ -33,44 +34,90 @@ function Catalogue({ onAdd }: {onAdd:(p:Product)=>void}) {
   const [query,setQuery]=useState('');
   const [category,setCategory]=useState('Tout');
   const [sort,setSort]=useState('featured');
-  const [liveProducts,setLiveProducts]=useState<Product[]|null>(null);
+  const [remoteProducts,setRemoteProducts]=useState<Product[]|null>(null);
+  const [loading,setLoading]=useState(true);
+  const [apiUnavailable,setApiUnavailable]=useState(false);
 
   useEffect(()=>{
-    let active=true;
-    fetch('/api/products')
-      .then((response)=>{if(!response.ok) throw new Error('Catalogue API unavailable');return response.json();})
-      .then((payload:{data?:Array<{id:string;name:string;description:string|null;brand:string|null;category:string|null;price:string|number;imageUrl:string|null;imageAlt:string|null}>})=>{
-        if(!active||!Array.isArray(payload.data)||payload.data.length===0)return;
-        const mapped:Product[]=payload.data.map((row)=>({
-          id:row.id,
-          name:row.name,
-          brand:row.brand||'CTRL-TECH',
-          category:row.category||'Accessoires',
-          price:Number(row.price),
-          description:row.description||'Fiche produit à compléter.',
-          specs:[],
-          image:row.imageUrl||categories.find((item)=>item.name===row.category)?.image||categories[0].image,
-        }));
-        if(active)setLiveProducts(mapped);
-      })
-      .catch(()=>{if(active)setLiveProducts(null);});
-    return ()=>{active=false;};
-  },[]);
+    const controller=new AbortController();
+    setLoading(true);
+    fetchCatalogueProducts({
+      q:query.trim() || undefined,
+      category:category==='Tout' ? undefined : category,
+      signal:controller.signal,
+    }).then((items)=>{
+      setRemoteProducts(items);
+      setApiUnavailable(false);
+    }).catch((error:unknown)=>{
+      if(error instanceof Error && error.name==='AbortError') return;
+      setRemoteProducts(null);
+      setApiUnavailable(true);
+    }).finally(()=>{
+      if(!controller.signal.aborted)setLoading(false);
+    });
+    return ()=>controller.abort();
+  },[query,category]);
 
-  const sourceProducts=liveProducts?.length?liveProducts:products;
-  const shown=useMemo(()=>sourceProducts
-    .filter((p)=>(category==='Tout'||p.category===category)&&(`${p.name} ${p.brand}`.toLowerCase().includes(query.toLowerCase())))
-    .sort((a,b)=>sort==='price-asc'?a.price-b.price:sort==='price-desc'?b.price-a.price:0),[sourceProducts,query,category,sort]);
+  const sourceProducts=remoteProducts ?? products;
+  const shown=useMemo(()=>{
+    const filtered=remoteProducts===null
+      ? sourceProducts.filter((p)=>(category==='Tout'||p.category===category)&&(`${p.name} ${p.brand}`.toLowerCase().includes(query.toLowerCase())))
+      : [...sourceProducts];
+    return filtered.sort((a,b)=>sort==='price-asc'?a.price-b.price:sort==='price-desc'?b.price-a.price:sort==='featured'?Number(Boolean(b.featured))-Number(Boolean(a.featured))||a.name.localeCompare(b.name):0);
+  },[sourceProducts,remoteProducts,query,category,sort]);
 
-  return <main className="container page-main"><div className="page-kicker">CTRL-TECH / CATALOGUE</div><div className="catalogue-title"><div><h1>Le catalogue <em>CTRL-TECH.</em></h1><p>Une sélection de technologies pour vos projets, votre travail et votre quotidien.</p></div><span>{shown.length} références {liveProducts?.length?'publiées':'de démonstration'}</span></div><div className="catalogue-tools"><div className="catalogue-search"><Search size={18}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un produit, une marque…"/></div><div className="filter-label"><SlidersHorizontal size={16}/> Filtrer</div><select value={category} onChange={e=>setCategory(e.target.value)} aria-label="Catégorie"><option>Tout</option>{categories.map(c=><option key={c.name}>{c.name}</option>)}</select><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Trier"><option value="featured">Trier par défaut</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option></select></div><div className="product-grid catalogue-grid">{shown.map(p=><ProductCard key={p.id} product={p} onAdd={onAdd}/>)}</div>{shown.length===0&&<div className="empty-state">Aucun produit ne correspond à cette recherche.</div>}<p className="catalogue-disclaimer">Catalogue de travail basé sur le document fourni. Les prix sont indicatifs ; disponibilité, configuration et conditions de vente doivent être confirmées par CTRL-TECH avant toute commande.</p></main>;
+  return <main className="container page-main">
+    <div className="page-kicker">CTRL-TECH / CATALOGUE</div>
+    <div className="catalogue-title"><div><h1>Le catalogue <em>CTRL-TECH.</em></h1><p>Une sélection de technologies pour vos projets, votre travail et votre quotidien.</p></div><span aria-live="polite">{shown.length} références {remoteProducts!==null?'publiées':'de démonstration'}</span></div>
+    <div className="catalogue-tools">
+      <div className="catalogue-search"><Search size={18}/><input aria-label="Rechercher un produit ou une marque" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher un produit, une marque…"/></div>
+      <div className="filter-label"><SlidersHorizontal size={16}/> Filtrer</div>
+      <select value={category} onChange={e=>setCategory(e.target.value)} aria-label="Filtrer par catégorie"><option>Tout</option>{categories.map(c=><option key={c.name}>{c.name}</option>)}</select>
+      <select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Trier les produits"><option value="featured">Trier par sélection</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option></select>
+    </div>
+    {loading&&<p className="catalogue-status" role="status">Chargement du catalogue…</p>}
+    {apiUnavailable&&<p className="catalogue-status" role="status">Le catalogue en ligne est momentanément indisponible. Affichage des références de démonstration.</p>}
+    <div className="product-grid catalogue-grid">{shown.map(p=><ProductCard key={p.id} product={p} onAdd={onAdd}/>)}</div>
+    {!loading&&shown.length===0&&<div className="empty-state" role="status">Aucun produit ne correspond à cette recherche.</div>}
+    <p className="catalogue-disclaimer">Catalogue de travail. Les prix sont indicatifs ; disponibilité, configuration et conditions de vente doivent être confirmées par CTRL-TECH avant toute commande.</p>
+  </main>;
 }
-
 function ProductDetail({onAdd}:{onAdd:(p:Product)=>void}) {
-  const {id}=useParams(); const p=products.find(x=>x.id===id);
-  if(!p) return <main className="container page-main empty-state">Produit introuvable. <Link to="/catalogue">Retour au catalogue</Link></main>;
-  return <main className="container page-main"><div className="page-kicker"><Link to="/">Accueil</Link> / <Link to="/catalogue">Catalogue</Link> / {p.name}</div><div className="detail-grid"><div className="detail-image"><img src={p.image} alt={p.name}/></div><div className="detail-copy"><span className="eyebrow dark"><span></span> {p.brand} · {p.category}</span><h1>{p.name}</h1><p>{p.description}</p><div className="detail-price">{formatPrice(p.price)}<small>Prix indicatif, à confirmer en magasin</small></div><h3>Caractéristiques principales</h3><ul>{p.specs.map(s=><li key={s}><ChevronRight size={16}/>{s}</li>)}</ul><div className="notice"><ShieldCheck size={18}/><span>Produit présenté à titre de catalogue. Stock, configuration exacte et garantie à confirmer auprès de CTRL-TECH.</span></div><button className="button button-dark" onClick={()=>onAdd(p)}>Ajouter au panier <ShoppingBag size={17}/></button></div></div></main>;
-}
+  const {id}=useParams();
+  const localProduct=products.find(x=>x.id===id);
+  const [remoteProduct,setRemoteProduct]=useState<Product|null>(null);
+  const [loading,setLoading]=useState(()=>Boolean(id&&isUuid(id)));
+  const [unavailable,setUnavailable]=useState(false);
 
+  useEffect(()=>{
+    if(!id||!isUuid(id)){setRemoteProduct(null);setLoading(false);return;}
+    const controller=new AbortController();
+    setLoading(true);
+    fetchCatalogueProducts({id,signal:controller.signal}).then((items)=>{
+      setRemoteProduct(items[0]??null);
+      setUnavailable(false);
+    }).catch((error:unknown)=>{
+      if(error instanceof Error&&error.name==='AbortError')return;
+      setUnavailable(true);
+      setRemoteProduct(null);
+    }).finally(()=>{if(!controller.signal.aborted)setLoading(false);});
+    return ()=>controller.abort();
+  },[id]);
+
+  const p=localProduct??remoteProduct;
+  if(loading)return <main className="container page-main empty-state" role="status">Chargement de la fiche produit…</main>;
+  if(!p)return <main className="container page-main empty-state"><h1>Produit introuvable</h1><p>{unavailable?'La fiche produit ne peut pas être chargée pour le moment.':'Cette référence n’est pas disponible dans le catalogue.'}</p><Link to="/catalogue">Retour au catalogue</Link></main>;
+  return <main className="container page-main">
+    <div className="page-kicker"><Link to="/">Accueil</Link> / <Link to="/catalogue">Catalogue</Link> / {p.name}</div>
+    <div className="detail-grid"><div className="detail-image"><img src={p.image} alt={p.name}/></div><div className="detail-copy">
+      <span className="eyebrow dark"><span></span> {p.brand} · {p.category}</span><h1>{p.name}</h1><p>{p.description}</p>
+      <div className="detail-price">{formatPrice(p.price)}<small>Prix indicatif, à confirmer en magasin</small></div>
+      <h3>Caractéristiques principales</h3><ul>{p.specs.map(s=><li key={s}><ChevronRight size={16}/>{s}</li>)}</ul>
+      <div className="notice"><ShieldCheck size={18}/><span>Produit présenté à titre de catalogue. Stock, configuration exacte et garantie à confirmer auprès de CTRL-TECH.</span></div>
+      <button className="button button-dark" type="button" onClick={()=>onAdd(p)}>Ajouter au panier <ShoppingBag size={17}/></button>
+    </div></div>
+  </main>;
+}
 function Cart({items,onRemove}:{items:Product[];onRemove:(id:string)=>void}) {
   return <main className="container page-main"><div className="page-kicker">CTRL-TECH / PANIER</div><h1 className="cart-title">Votre panier.</h1>{items.length===0?<div className="empty-state"><ShoppingBag size={32}/><h2>Votre panier est vide</h2><p>Explorez le catalogue pour ajouter vos produits préférés.</p><Link className="button button-dark" to="/catalogue">Voir le catalogue <ArrowRight size={17}/></Link></div>:<div className="cart-layout"><div className="cart-list">{items.map((p,i)=><div className="cart-row" key={`${p.id}-${i}`}><img src={p.image} alt=""/><div><b>{p.name}</b><small>{p.brand} · Prix indicatif</small><strong>{formatPrice(p.price)}</strong></div><button onClick={()=>onRemove(p.id)} aria-label="Retirer"><X size={18}/></button></div>)}</div><aside className="cart-summary"><h3>Récapitulatif</h3><p><span>Articles</span><b>{items.length}</b></p><p><span>Total indicatif</span><b>{formatPrice(items.reduce((s,p)=>s+p.price,0))}</b></p><div className="notice">Ce panier est une maquette fonctionnelle. Le passage de commande sera activé après validation des prix, stocks et modalités commerciales.</div><button className="button button-dark" disabled>Commande bientôt disponible</button></aside></div>}</main>;
 }

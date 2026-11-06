@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BadgeCheck, Bell, Box, Building2, CalendarDays, CheckCircle2, ChevronRight, CircleHelp, ClipboardList, CreditCard, FileText, Headphones, LayoutDashboard, LockKeyhole, MapPin, Package, PackageCheck, Plus, Search, Settings, ShieldCheck, ShoppingBag, Truck, Users, Wallet, X } from 'lucide-react';
+import { ArrowRight, Bell, Box, CheckCircle2, ChevronRight, CircleHelp, ClipboardList, CreditCard, FileText, Headphones, LayoutDashboard, MapPin, Package, PackageCheck, Plus, Search, Settings, ShieldCheck, ShoppingBag, Truck, Users, Wallet } from 'lucide-react';
 
 const demoOrders = [
   { id: 'CT-2026-0048', date: '04 nov. 2026', status: 'En préparation', total: '$1 250', items: 'Samsung Galaxy S25 Ultra' },

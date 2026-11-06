@@ -542,3 +542,7 @@ h1 em, h2 em { color: var(--signal); font-style: normal; }
 
 .product-availability { margin-top: 7px; color: #8A7660; font-size: 9px; letter-spacing: .02em; }
 .product-card-bottom { margin-top: 2px; }
+
+.price-filter { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.price-filter input { width:100%; min-width:0; height:40px; padding:0 9px; border:1px solid var(--line); border-radius:var(--radius-sm); background:rgba(255,255,255,.7); color:var(--graphite); font-size:10px; }
+.price-filter input:focus { border-color:var(--signal); outline:0; box-shadow:0 0 0 3px rgba(217,107,69,.12); }

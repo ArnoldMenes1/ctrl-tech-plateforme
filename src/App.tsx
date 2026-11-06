@@ -89,7 +89,7 @@ function Catalogue({ onAdd, onCompare }: { onAdd: (p: Product) => void; onCompar
   const [sort, setSort] = useState('featured');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
-  useEffect(() => { const nextQuery = params.get('q') || ''; const nextCategory = params.get('category') || 'Tout'; if (nextQuery !== query) setQuery(nextQuery); if (nextCategory !== category) setCategory(nextCategory); }, [params]);
+  useEffect(() => { const nextQuery = params.get('q') || ''; const nextCategory = params.get('category') || 'Tout'; setQuery(current => current === nextQuery ? current : nextQuery); setCategory(current => current === nextCategory ? current : nextCategory); }, [params]);
   const pageSize = 12;
   const brands = useMemo(() => ['Toutes', ...Array.from(new Set(products.map(p => p.brand))).sort()], []);
   const filtered = useMemo(() => { const q = query.trim().toLocaleLowerCase('fr'); return products.filter(p => (category === 'Tout' || p.category === category) && (brand === 'Toutes' || p.brand === brand) && (!minPrice || p.price >= Number(minPrice)) && (!maxPrice || p.price <= Number(maxPrice)) && (!q || `${p.name} ${p.brand} ${p.specs.join(' ')}`.toLocaleLowerCase('fr').includes(q))); }, [query, category, brand, minPrice, maxPrice]);

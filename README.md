@@ -4,7 +4,20 @@ Plateforme e-commerce officielle de CTRL-TECH, magasin de produits électronique
 
 > **Objectif :** concevoir, développer et exploiter une véritable boutique en ligne, rapide, sécurisée, administrable et adaptée aux habitudes d'achat locales. Le catalogue fourni sert de base métier initiale ; les stocks, prix et garanties devront être confirmés par CTRL-TECH avant publication.
 
-> **Liens :**: https://ctrl-tech-plateforme-93vzkd3pm-menesmva-9298s-projects.vercel.app?_vercel_share=BS1tYdTitGluIwauE4AGYksZbwEKqULU
+> **Liens :** la Preview d'équipe et l'historique des versions sont documentés ci-dessous.
+
+## Liens de travail — Preview équipe
+
+- **Aperçu public de la branche `feat/storefront-foundation` :** https://ctrl-tech-plateforme-dg7rpeski-menesmva-9298s-projects.vercel.app?_vercel_share=vnd1t7Igfxl1Ew3dkz8fTaE1t4b8OJNh
+- **Historique des déploiements Vercel :** https://vercel.com/menesmva-9298s-projects/ctrl-tech-plateforme/deployments
+- **Branche source :** https://github.com/ArnoldMenes1/ctrl-tech-plateforme/tree/feat/storefront-foundation
+
+Le lien Preview utilise un accès partageable Vercel pour contourner la protection SSO de l'environnement Preview. Toute personne qui possède ce lien peut consulter cette version ; partage-le uniquement avec les personnes concernées. Le dépôt GitHub étant privé, l'accès au code reste soumis aux permissions GitHub.
+
+Chaque nouveau commit poussé sur une branche connectée à Vercel crée une nouvelle Preview. Les déploiements restent consultables dans l'historique Vercel et peuvent être ouverts individuellement pour comparer les versions ou revenir à un état antérieur.
+
+---
+
 ---
 
 ## 1. Vision et objectifs

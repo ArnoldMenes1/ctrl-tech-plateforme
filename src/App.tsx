@@ -10,9 +10,18 @@ const categoryIcons = { Smartphones: Smartphone, Ordinateurs: Laptop, Tablettes:
 
 function readCart(): CartLine[] {
   try {
-    const parsed = JSON.parse(window.localStorage.getItem('ctrl-tech-cart') || '[]');
+    const parsed: unknown = JSON.parse(window.localStorage.getItem('ctrl-tech-cart') || '[]');
     if (!Array.isArray(parsed)) return [];
-    return parsed.map((entry: any) => entry?.product?.id && typeof entry.quantity === 'number' ? entry as CartLine : entry?.id ? { product: entry as Product, quantity: 1 } : null).filter(Boolean) as CartLine[];
+    return parsed.map((entry: unknown): CartLine | null => {
+      if (typeof entry !== 'object' || entry === null) return null;
+      const value = entry as Record<string, unknown>;
+      const nestedProduct = value.product;
+      if (typeof nestedProduct === 'object' && nestedProduct !== null && typeof (nestedProduct as Record<string, unknown>).id === 'string' && typeof value.quantity === 'number') {
+        return { product: nestedProduct as Product, quantity: value.quantity };
+      }
+      if (typeof value.id === 'string') return { product: value as unknown as Product, quantity: 1 };
+      return null;
+    }).filter((line): line is CartLine => line !== null);
   } catch { return []; }
 }
 

@@ -316,3 +316,118 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+
+/* Precision Retail — finishing layer aligned with docs/design/DESIGN-SYSTEM.md */
+:root {
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-20: 80px; --space-24: 96px;
+  --content-width: 1280px;
+  --display-size: clamp(40px, 4.4vw, 56px);
+  --h1-size: clamp(34px, 3.45vw, 44px);
+  --h2-size: clamp(28px, 2.5vw, 32px);
+  --focus-ring: 0 0 0 3px rgba(217,107,69,.24);
+}
+.container { width: min(var(--content-width), calc(100% - 64px)); }
+.hero h1 { font-size: var(--display-size); }
+.catalogue-title h1, .cart-title { font-size: var(--h1-size); }
+.section-heading h2 { font-size: var(--h2-size); }
+.button, .auth-trigger, .add-button, .menu-toggle, .search-action, .cart-action {
+  -webkit-tap-highlight-color: transparent;
+}
+.button:focus-visible, .auth-trigger:focus-visible, .add-button:focus-visible,
+.menu-toggle:focus-visible, .search-action:focus-visible, .cart-action:focus-visible {
+  outline: 2px solid var(--signal); outline-offset: 3px; box-shadow: var(--focus-ring);
+}
+.product-card, .category-card, .contact-card, .cart-summary {
+  box-shadow: none;
+}
+.product-card:hover { box-shadow: var(--shadow-soft); }
+.category-card { border-radius: var(--radius-lg); }
+.product-image { background: var(--ivory); }
+.product-image img { object-fit: contain; padding: 18px; }
+.detail-image { border: 1px solid rgba(20,35,43,.07); }
+.catalogue-tools { background: rgba(20,35,43,.035); }
+.catalogue-search:focus-within { border-color: var(--signal); box-shadow: var(--focus-ring); }
+.catalogue-tools select:focus-visible { border-color: var(--signal); }
+.cart-summary { position: sticky; top: 140px; }
+.footer { background: var(--graphite); }
+@media (min-width: 1440px) {
+  .container { width: min(1440px, calc(100% - 96px)); }
+}
+@media (max-width: 1023px) {
+  .nav-wrap { gap: 18px; }
+  .nav-links { gap: 18px; }
+  .nav-actions { gap: 10px; }
+  .product-grid, .catalogue-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .service-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .container { width: calc(100% - 32px); }
+  .page-main { padding-top: 40px; padding-bottom: 64px; }
+  .hero-grid { min-height: 0; grid-template-columns: 1fr; gap: 0; }
+  .hero-copy { padding: 64px 0 30px; }
+  .hero h1 { font-size: clamp(36px, 10vw, 40px); line-height: 1.08; }
+  .hero-copy > p { font-size: 15px; }
+  .hero-visual { height: 340px; margin: 0 -8px 18px; }
+  .hero-device { width: 190px; height: 265px; }
+  .hero-orbit { width: 290px; height: 290px; }
+  .orbit-two { width: 230px; height: 230px; }
+  .note-top { top: 26px; right: 4px; }
+  .note-bottom { bottom: 24px; left: 0; }
+  .hero-index { bottom: 0; right: 4px; }
+  .hero-bottom { min-height: 58px; gap: 12px; overflow-x: auto; justify-content: flex-start; white-space: nowrap; font-size: 10px; }
+  .section { padding-top: 56px; padding-bottom: 56px; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 18px; margin-bottom: 24px; }
+  .section-heading h2 { font-size: 28px; }
+  .category-grid, .product-grid, .catalogue-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .category-card { height: 230px; border-radius: var(--radius-md); }
+  .category-content { left: 14px; bottom: 16px; right: 42px; }
+  .category-content h3 { font-size: 18px; }
+  .category-arrow { right: 10px; bottom: 12px; width: 30px; height: 30px; }
+  .featured-section { padding: 56px 0; }
+  .product-image { height: 165px; }
+  .product-image img { padding: 10px; }
+  .product-info { padding: 12px; }
+  .product-meta { flex-wrap: wrap; font-size: 9px; }
+  .product-title { font-size: 14px; margin: 9px 0 6px; }
+  .spec-line { font-size: 11px; }
+  .product-bottom { margin-top: 12px; padding-top: 11px; }
+  .product-bottom strong { font-size: 14px; }
+  .product-bottom small { font-size: 10px; }
+  .add-button { width: 38px; height: 38px; }
+  .service-strip { grid-template-columns: 1fr 1fr; gap: 16px 12px; padding-top: 34px; padding-bottom: 34px; }
+  .service-strip b { font-size: 12px; }
+  .service-strip small { font-size: 11px; }
+  .contact-banner { padding: 56px 0; }
+  .contact-inner { align-items: flex-start; flex-direction: column; gap: 24px; }
+  .contact-inner h2 { font-size: 30px; }
+  .contact-card { width: 100%; }
+  .footer-main { grid-template-columns: 1fr; gap: 18px; padding-top: 36px; padding-bottom: 32px; }
+  .footer-links { flex-wrap: wrap; }
+  .footer-bottom { flex-direction: column; gap: 8px; font-size: 10px; }
+  .catalogue-title { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .catalogue-title h1 { font-size: 34px; }
+  .catalogue-tools { display: grid; grid-template-columns: 1fr 1fr; padding: 12px; gap: 10px; margin: 24px 0 20px; }
+  .catalogue-search { grid-column: 1 / -1; min-width: 0; }
+  .filter-label { grid-column: 1 / -1; }
+  .catalogue-tools select { min-width: 0; width: 100%; padding-right: 8px; }
+  .detail-grid { grid-template-columns: 1fr; gap: 26px; padding: 0; }
+  .detail-image { height: 330px; padding: 16px; }
+  .detail-copy h1 { font-size: 32px; }
+  .cart-layout { grid-template-columns: 1fr; gap: 24px; }
+  .cart-summary { position: static; }
+  .cart-row { gap: 12px; }
+  .cart-row img { width: 76px; height: 76px; }
+}
+@media (max-width: 380px) {
+  .category-grid, .product-grid, .catalogue-grid { grid-template-columns: 1fr; }
+  .category-card { height: 260px; }
+  .product-image { height: 210px; }
+  .service-strip { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

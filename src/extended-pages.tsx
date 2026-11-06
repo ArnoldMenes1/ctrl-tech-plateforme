@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Bell, Box, CheckCircle2, ChevronRight, CircleHelp, ClipboardList, CreditCard, FileText, Headphones, LayoutDashboard, MapPin, Package, PackageCheck, Plus, Search, Settings, ShieldCheck, ShoppingBag, Truck, Users, Wallet } from 'lucide-react';
 
 const demoOrders = [
@@ -86,21 +86,3 @@ export function AdminSettings() {
   return <AdminShell title="Paramètres" subtitle="Les réglages opérationnels et commerciaux de CTRL-TECH."><div className="workspace-settings-grid">{[['Identité du magasin','Nom, logo, adresse et contacts'],['Règles commerciales','Prix, devise, garanties et retours'],['Livraison & retrait','Zones, frais et délais'],['Paiements','Moyens acceptés et rapprochement'],['Sécurité','Rôles, permissions et sessions'],['Notifications','E-mails et alertes opérationnelles']].map(([h,p])=><div className="workspace-panel" key={h}><Settings/><h3>{h}</h3><p>{p}</p><Status tone="warm">À configurer</Status></div>)}</div></AdminShell>;
 }
 
-export function ExtendedRoutes() {
-  return <Routes>
-    <Route path="/commande" element={<CheckoutPage/>}/>
-    <Route path="/compte" element={<AccountPage/>}/>
-    <Route path="/compte/commandes" element={<OrdersPage/>}/>
-    <Route path="/compte/commandes/:id" element={<OrderDetailPage/>}/>
-    <Route path="/aide" element={<HelpPage/>}/>
-    <Route path="/conditions" element={<InfoPage kind="conditions"/>}/>
-    <Route path="/livraison-retours" element={<InfoPage kind="livraison"/>}/>
-    <Route path="/confidentialite" element={<InfoPage kind="confidentialite"/>}/>
-    <Route path="/admin" element={<AdminDashboard/>}/>
-    <Route path="/admin/produits" element={<AdminProducts/>}/>
-    <Route path="/admin/commandes" element={<AdminOrders/>}/>
-    <Route path="/admin/stocks" element={<AdminStock/>}/>
-    <Route path="/admin/clients" element={<AdminClients/>}/>
-    <Route path="/admin/parametres" element={<AdminSettings/>}/>
-  </Routes>;
-}

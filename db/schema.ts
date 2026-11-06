@@ -79,6 +79,7 @@ export const inventoryItems = pgTable('inventory_items', {
   check('inventory_on_hand_nonnegative', sql`${table.quantityOnHand} >= 0`),
   check('inventory_reserved_nonnegative', sql`${table.quantityReserved} >= 0`),
   check('inventory_reserved_lte_on_hand', sql`${table.quantityReserved} <= ${table.quantityOnHand}`),
+  check('inventory_low_stock_threshold_nonnegative', sql`${table.lowStockThreshold} >= 0`),
 ]);
 
 export const inventoryMovements = pgTable('inventory_movements', {

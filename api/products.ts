@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { brands, categories, products, productVariants, productImages } from '../db/schema';
+import { brands, categories, products, productVariants, productImages } from '../db/schema.js';
 
 export default async function handler(request: Request) {
   if (request.method !== 'GET') {

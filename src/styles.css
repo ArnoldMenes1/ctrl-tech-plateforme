@@ -539,3 +539,6 @@ h1 em, h2 em { color: var(--signal); font-style: normal; }
   .info-page h1 { font-size:34px; }
   .info-intro { font-size:15px; }
 }
+
+.product-availability { margin-top: 7px; color: #8A7660; font-size: 9px; letter-spacing: .02em; }
+.product-card-bottom { margin-top: 2px; }

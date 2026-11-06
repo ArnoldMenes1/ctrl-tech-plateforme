@@ -4,6 +4,7 @@ Plateforme e-commerce officielle de CTRL-TECH, magasin de produits électronique
 
 > **Objectif :** concevoir, développer et exploiter une véritable boutique en ligne, rapide, sécurisée, administrable et adaptée aux habitudes d'achat locales. Le catalogue fourni sert de base métier initiale ; les stocks, prix et garanties devront être confirmés par CTRL-TECH avant publication.
 
+> **Liens :**: https://ctrl-tech-plateforme-93vzkd3pm-menesmva-9298s-projects.vercel.app?_vercel_share=BS1tYdTitGluIwauE4AGYksZbwEKqULU
 ---
 
 ## 1. Vision et objectifs

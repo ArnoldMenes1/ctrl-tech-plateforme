@@ -125,35 +125,40 @@ La structure finale peut être ajustée au premier commit technique, mais les fr
 
 ## 4. Expérience utilisateur et design
 
-### Direction artistique
+### Direction artistique validée — Precision Retail
 
-Créer une identité e-commerce technologique, premium, claire et crédible, sans tomber dans un style cyberpunk ou une interface surchargée.
+La direction artistique officielle est **Precision Retail** : une expérience premium, éditoriale et technique, inspirée d'un showroom technologique contemporain.
 
-- Interface lumineuse, hiérarchie typographique nette et espaces généreux.
-- Palette à valider avec CTRL-TECH ; proposition initiale : bleu nuit, bleu électrique, blanc cassé et gris neutres.
-- Typographie sans-serif moderne et lisible.
-- Photographies produits homogènes, haute résolution, cadrage cohérent.
-- Animations discrètes, rapides et utiles ; respecter `prefers-reduced-motion`.
-- États de chargement, erreurs, succès, rupture et indisponibilité conçus dès le départ.
-- Contraste WCAG 2.2 AA visé, navigation clavier et libellés accessibles.
+- **Palette :** Graphite profond `#14232B`, Ivoire minéral `#F3F0E8`, Orange signal `#D96B45`, Sauge technique `#B9C9B8`, Blanc optique `#FFFFFF`, Gris titane `#69777B`, Champagne `#E8C77A`.
+- **Titres :** Space Grotesk.
+- **Interface et lecture :** Instrument Sans.
+- **Données techniques :** IBM Plex Mono.
+- **Espacement :** échelle basée sur 4 px, de 4 à 96 px, avec règles de composition desktop/mobile.
+- **Ambiance :** hiérarchie éditoriale, espaces généreux, photographie produit soignée, accents orange mesurés et animations discrètes.
+- **À éviter :** néons, cyberpunk, dégradés génériques et décorations sans fonction.
+- **Accessibilité :** cible WCAG 2.2 AA et respect de `prefers-reduced-motion`.
 
-### Parcours et pages publiques
+La spécification des couleurs, typographies, espacements, grilles, composants et comportements est documentée dans [Design System Precision Retail](docs/design/DESIGN-SYSTEM.md).
 
-- Accueil : proposition de valeur, catégories, nouveautés, sélections et promotions validées.
-- Catalogue : grille produits, recherche, filtres, tri, pagination.
-- Catégories et marques.
-- Fiche produit : galerie, caractéristiques, prix, disponibilité, garantie, livraison et produits associés.
-- Comparateur de produits (phase ultérieure si prioritaire).
+### Architecture UX validée
+
+- Accueil éditorial.
+- Navigation hybride : accès par catégories et par marques.
+- Catalogue avec recherche, filtres et tri.
+- Pages catégories adaptées à chaque famille.
+- Fiche produit avec galerie, variantes, prix, disponibilité et caractéristiques structurées.
+- Comparateur activé, limité à trois produits d'une même famille.
 - Panier persistant.
-- Checkout : coordonnées, livraison/retrait, mode de paiement confirmé, récapitulatif.
+- Compte client requis pour finaliser une commande et consulter son suivi.
+- Checkout en étapes, avec méthodes de paiement et modes de réception uniquement après validation métier.
 - Confirmation et suivi de commande.
-- À propos, contact, localisation, FAQ, politique de confidentialité, conditions de vente, livraison/retours et garantie.
-- Compte client : profil, adresses, commandes et préférences.
-- Pages 404 et erreurs réseau.
+- Back-office avec sidebar : dashboard, catalogue, inventaire, commandes, clients, promotions, rapports, équipe, paramètres et journal d'activité.
+
+Le détail des 22 écrans, de leurs sections, états, interactions, règles responsive et parcours critiques figure dans [Screen Specification v1.0](docs/product/SCREEN-SPECIFICATION.md). Les décisions validées et celles qui restent à confirmer sont recensées dans [UX Decisions](docs/product/UX-DECISIONS.md).
 
 ### Responsive
 
-Priorité aux smartphones, puis tablettes et desktop. Vérifier notamment les petits écrans Android, les connexions lentes, les formulaires tactiles, les images optimisées et la navigation au clavier.
+Concevoir chaque écran pour mobile, tablette et desktop : navigation adaptée, grilles ajustées, filtres mobiles en panneau, tableaux administratifs transformés en vues lisibles et zones tactiles confortables. Les breakpoints sont des repères ; les composants doivent s'adapter à l'espace réellement disponible.
 
 ## 5. Back-office et rôles
 

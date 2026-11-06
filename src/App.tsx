@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowDownUp, ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronRight, CircleHelp, CreditCard, Filter, GitCompareArrows, Headphones, Laptop, MapPin, Menu, Minus, Plus, Search, ShieldCheck, ShoppingBag, Smartphone, Tablet, Truck, X } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
 import { categories, formatPrice, products, type Product } from './catalog';
 
 type CartLine = { product: Product; quantity: number };
@@ -38,7 +38,7 @@ function Header({ count }: { count: number }) {
       <nav className={mobileOpen ? 'primary-nav is-open' : 'primary-nav'} aria-label="Navigation principale">
         <Link to="/catalogue" onClick={() => setMobileOpen(false)}>Catalogue</Link><Link to="/catalogue?category=Smartphones" onClick={() => setMobileOpen(false)}>Smartphones</Link><Link to="/catalogue?category=Ordinateurs" onClick={() => setMobileOpen(false)}>Ordinateurs</Link><Link to="/catalogue?category=Accessoires" onClick={() => setMobileOpen(false)}>Accessoires</Link><Link to="/marques" onClick={() => setMobileOpen(false)}>Marques</Link><a href="/#magasin" onClick={() => setMobileOpen(false)}>Le magasin</a>
       </nav>
-      <div className="nav-tools"><button className="icon-button" aria-label="Ouvrir la recherche" onClick={() => setSearchOpen(!searchOpen)}><Search size={19}/></button><Link to="/panier" className="icon-button cart-trigger" aria-label={`Panier, ${count} articles`}><ShoppingBag size={19}/><span>{count}</span></Link>
+      <div className="nav-tools"><button className="icon-button" aria-label="Ouvrir la recherche" onClick={() => setSearchOpen(!searchOpen)}><Search size={19}/></button><Link to="/comparateur" className="icon-button" aria-label="Comparateur"><GitCompareArrows size={18}/></Link><Link to="/panier" className="icon-button cart-trigger" aria-label={`Panier, ${count} articles`}><ShoppingBag size={19}/><span>{count}</span></Link>
         {clerkEnabled ? <><SignedOut><SignInButton mode="modal"><button className="account-link">Compte</button></SignInButton></SignedOut><SignedIn><UserButton afterSignOutUrl="/"/></SignedIn></> : <span className="account-placeholder">Espace client</span>}
         <button className="mobile-toggle" aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'} onClick={() => setMobileOpen(!mobileOpen)}>{mobileOpen ? <X/> : <Menu/>}</button>
       </div></div>
@@ -61,7 +61,7 @@ function ProductCard({ product, onAdd, onCompare }: { product: Product; onAdd: (
 function Home({ onAdd, onCompare }: { onAdd: (p: Product) => void; onCompare: (p: Product) => void }) {
   const featured = products.filter(p => p.featured).slice(0, 4);
   return <main>
-    <section className="home-hero"><div className="container hero-layout"><div className="hero-content"><Eyebrow>Precision in technology · Lubumbashi</Eyebrow><h1>La technologie<br/>qui fait <em>avancer.</em></h1><p className="hero-intro">Une sélection exigeante de smartphones, ordinateurs et accessoires conçus pour accompagner vos ambitions.</p><div className="hero-actions"><Link to="/catalogue" className="button button-signal">Explorer le catalogue <ArrowUpRight size={17}/></Link><a href="#univers" className="text-action">Découvrir CTRL-TECH <ArrowRight size={16}/></a></div><div className="hero-footnote"><span>01 / 04</span><span>Performance · Fiabilité · Sélection</span></div></div>
+    <section className="home-hero"><div className="container hero-layout"><div className="hero-content"><Eyebrow>Precision in technology · Lubumbashi</Eyebrow><h1>La technologie<br/>qui fait <em>avancer.</em></h1><p className="hero-intro">Découvrez une sélection d’appareils électroniques conçus pour travailler, créer et aller plus loin.</p><div className="hero-actions"><Link to="/catalogue" className="button button-signal">Explorer le catalogue <ArrowUpRight size={17}/></Link><Link to="/marques" className="text-action">Découvrir nos marques <ArrowRight size={16}/></Link></div><div className="hero-footnote"><span>01 / 04</span><span>Performance · Fiabilité · Sélection</span></div></div>
       <div className="hero-art"><div className="hero-art-caption"><span>ÉDITION 2026</span><span>COLLECTION TECHNOLOGIE</span></div><div className="hero-image-main"><img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=1100&q=90" alt="Smartphone, visuel d’ambiance illustratif"/></div><div className="hero-image-note"><span className="note-index">A.</span><span><b>Choisir mieux.</b><small>Les bons outils, au bon moment.</small></span><ArrowUpRight size={18}/></div><div className="hero-orbit orbit-a"/><div className="hero-orbit orbit-b"/></div></div>
       <div className="container hero-bottomline"><span>UNE TECHNOLOGIE SÉLECTIONNÉE</span><div><span>APPLE</span><span>SAMSUNG</span><span>ASUS</span><span>LENOVO</span><span>DELL</span></div></div>
     </section>

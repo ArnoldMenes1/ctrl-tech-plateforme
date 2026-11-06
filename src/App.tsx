@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowDownUp, ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronRight, CircleHelp, CreditCard, Filter, Headphones, Laptop, MapPin, Menu, Minus, Plus, Search, ShieldCheck, ShoppingBag, Smartphone, Tablet, Truck, X } from 'lucide-react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
@@ -21,7 +21,7 @@ function Header({ count }: { count: number }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const submitSearch = (event: React.FormEvent) => { event.preventDefault(); navigate(`/catalogue?q=${encodeURIComponent(search)}`); setSearchOpen(false); setMobileOpen(false); };
+  const submitSearch = (event: FormEvent) => { event.preventDefault(); navigate(`/catalogue?q=${encodeURIComponent(search)}`); setSearchOpen(false); setMobileOpen(false); };
   return <>
     <div className="utility-bar"><div className="container utility-inner"><span>CTRL-TECH <i/> LUBUMBASHI, RDC</span><span>Catalogue 2026 <b>·</b> Prix indicatifs en USD</span></div></div>
     <header className="site-header"><div className="container nav-shell">
@@ -41,7 +41,7 @@ function Header({ count }: { count: number }) {
 function Breadcrumbs({ items }: { items: { label: string; to?: string }[] }) {
   return <nav className="breadcrumbs" aria-label="Fil d’Ariane"><Link to="/">Accueil</Link>{items.map((item, i) => <span key={i} className="crumb"><ChevronRight size={13}/>{item.to ? <Link to={item.to}>{item.label}</Link> : <span aria-current="page">{item.label}</span>}</span>)}</nav>;
 }
-function Eyebrow({ children }: { children: React.ReactNode }) { return <div className="eyebrow"><span/>{children}</div>; }
+function Eyebrow({ children }: { children: ReactNode }) { return <div className="eyebrow"><span/>{children}</div>; }
 
 function ProductCard({ product, onAdd }: { product: Product; onAdd: (p: Product) => void }) {
   return <article className="product-card"><Link to={`/produit/${product.id}`} className="product-media"><img src={product.image} alt={product.name} loading="lazy"/>{product.featured && <span className="product-ribbon">Sélection CTRL-TECH</span>}<span className="media-open"><ArrowUpRight size={17}/></span></Link>

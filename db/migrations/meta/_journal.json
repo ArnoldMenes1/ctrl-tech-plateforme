@@ -8,6 +8,13 @@
       "when": 1793874000000,
       "tag": "0001_catalogue_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1762387200000,
+      "tag": "0002_inventory_constraints",
+      "breakpoints": true
     }
   ]
 }

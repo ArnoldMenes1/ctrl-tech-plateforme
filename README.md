@@ -53,7 +53,7 @@ Le catalogue de travail n'est pas une preuve de stock actuel ni une validation c
 | Backend | Vercel Functions, Node.js + TypeScript | API métier et règles serveur |
 | Base de données | Neon PostgreSQL | Données transactionnelles |
 | ORM / migrations | Drizzle ORM + Drizzle Kit | Schéma typé et migrations versionnées |
-| Authentification | Clerk | Connexion, sessions et identité |
+| Authentification | Neon Managed Better Auth (`@neondatabase/auth`) | Connexion, sessions et identité branchées sur Neon |
 | Autorisations | RBAC applicatif côté serveur | Rôles client, opérateur, gestionnaire, administrateur |
 | Images | Stockage objet/CDN à sélectionner | Photos produits et médias |
 | Tests | Vitest, React Testing Library, Playwright | Tests unitaires, intégration et E2E |
@@ -68,11 +68,11 @@ Le catalogue de travail n'est pas une preuve de stock actuel ni une validation c
 ```text
 React Browser
     |
-    | HTTPS / Clerk session
+    | HTTPS / Neon Managed Better Auth session
     v
 Vercel Functions (API)
     |
-    +---- Clerk (identité et session)
+    +---- Neon Managed Better Auth (identité et session)
     |
     +---- Service métier / validation / RBAC
     |
@@ -169,7 +169,7 @@ Priorité aux smartphones, puis tablettes et desktop. Vérifier notamment les pe
 | Administrateur | Utilisateurs internes, rôles, paramètres et accès complets |
 | Super administrateur technique | Configuration critique et audit technique |
 
-Le rôle est enregistré et contrôlé côté serveur. Les métadonnées Clerk peuvent aider à transporter des claims, mais ne remplacent pas les autorisations vérifiées sur les ressources en base.
+Le rôle est enregistré et contrôlé côté serveur. Les métadonnées Neon Managed Better Auth peuvent aider à transporter des claims, mais ne remplacent pas les autorisations vérifiées sur les ressources en base.
 
 ### Modules d'administration
 
@@ -199,7 +199,7 @@ Schéma relationnel à confirmer pendant la conception détaillée. Toutes les t
 - `inventory_movements` : entrées, sorties, corrections et auteur.
 
 ### Clients et commandes
-- `customer_profiles` : profil applicatif lié à l'identifiant Clerk.
+- `customer_profiles` : profil applicatif lié à l'identifiant Neon Managed Better Auth.
 - `customer_addresses` : adresses de livraison/facturation.
 - `carts` / `cart_items` : panier.
 - `orders` / `order_items` : commande et instantané des prix/produits au moment de l'achat.
@@ -209,7 +209,7 @@ Schéma relationnel à confirmer pendant la conception détaillée. Toutes les t
 
 ### Gestion et conformité
 - `promotions` / `promotion_redemptions`.
-- `admin_users` ou table de rôles liée à Clerk.
+- `admin_users` ou table de rôles liée à Neon Managed Better Auth.
 - `audit_logs` : acteur, action, ressource, date et métadonnées minimales.
 - `store_settings` : devise, coordonnées, règles et paramètres commerciaux.
 - `webhook_events` : identifiants d'événements traités pour assurer l'idempotence.
@@ -227,7 +227,7 @@ Schéma relationnel à confirmer pendant la conception détaillée. Toutes les t
 ## 7. Sécurité et protection des données
 
 ### Authentification et autorisation
-- Clerk pour inscription/connexion, récupération de compte et gestion des sessions.
+- Neon Managed Better Auth pour inscription/connexion, récupération de compte et gestion des sessions.
 - Activer les protections MFA pour les comptes administrateurs.
 - Vérifier la session et l'identité dans chaque endpoint privé.
 - RBAC avec principe du moindre privilège et contrôle d'accès à chaque ressource.
@@ -333,13 +333,13 @@ Définir avec CTRL-TECH les quartiers/zones desservis, frais, délais, heures, r
 - La Production correspond uniquement à une release validée.
 
 ### Environnements
-| Environnement | Source | Base Neon | Clerk |
+| Environnement | Source | Base Neon | Neon Managed Better Auth |
 |---|---|---|---|
 | Local | branche de travail | branche dev dédiée | instance dev |
 | Preview | PR / branche | branche preview/dev isolée | instance dev |
 | Production | `main` / release validée | branche production | instance production |
 
-La création et le rattachement des projets Vercel, Neon et Clerk nécessitent les autorisations du propriétaire des comptes et la configuration des secrets. Ne jamais committer les fichiers `.env`.
+La création et le rattachement des projets Vercel, Neon et Neon Managed Better Auth nécessitent les autorisations du propriétaire des comptes et la configuration des secrets. Ne jamais committer les fichiers `.env`.
 
 ## 11. CI/CD et qualité
 
@@ -416,7 +416,7 @@ Les phases sont séquentielles, avec un livrable vérifiable et une validation a
 **Livrable :** modèle de données migré et API testée.
 
 ### Phase 4 — Authentification et sécurité
-- [ ] Créer et configurer l'application Clerk.
+- [ ] Créer et configurer l'application Neon Managed Better Auth.
 - [ ] Intégrer connexion, inscription et récupération.
 - [ ] Protéger les routes privées.
 - [ ] Implémenter RBAC serveur.
@@ -478,7 +478,7 @@ Les phases sont séquentielles, avec un livrable vérifiable et une validation a
 
 ### Phase 9 — Préparation production
 - [ ] Valider le domaine et le DNS.
-- [ ] Configurer Clerk en production.
+- [ ] Configurer Neon Managed Better Auth en production.
 - [ ] Configurer Neon production et sauvegardes.
 - [ ] Configurer les secrets Vercel Production.
 - [ ] Exécuter migrations contrôlées.
@@ -580,7 +580,7 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 - [x] Projet Neon créé (région AWS Europe West 2) avec branches `main` et `development`.
 - [x] Schéma catalogue initial appliqué sur `development`.
 - [ ] Migrations Drizzle automatisées et branche Preview isolée à finaliser.
-- [ ] Clés Clerk et vérification de session côté serveur ; provider frontend déjà préparé.
+- [ ] Clés Neon Managed Better Auth et vérification de session côté serveur ; provider frontend déjà préparé.
 - [ ] API métier, checkout sécurisé et back-office.
 - [ ] Tests E2E, recette et préparation Production.
 

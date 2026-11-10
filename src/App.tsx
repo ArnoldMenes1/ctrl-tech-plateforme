@@ -196,7 +196,7 @@ function AuthPage({ signup = false }: { signup?: boolean }) {
 }
 
 function AccountPage() {
-  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
+  const [user, setUser] = useState<{ name?: string | null; email?: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   useEffect(() => {

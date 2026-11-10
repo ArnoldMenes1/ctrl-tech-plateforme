@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowDownUp, ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronRight, CircleHelp, CreditCard, Filter, GitCompareArrows, Headphones, Laptop, MapPin, Menu, Minus, Plus, Search, ShieldCheck, ShoppingBag, Smartphone, Tablet, Truck, X } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+import { authClient } from './lib/auth';
 import { categories, formatPrice, products, type Product } from './catalog';
 
 type CartLine = { product: Product; quantity: number };
-const clerkEnabled = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 const categoryIcons = { Smartphones: Smartphone, Ordinateurs: Laptop, Tablettes: Tablet, Accessoires: Headphones };
 
 function readCart(): CartLine[] {
@@ -39,7 +38,7 @@ function Header({ count, compareCount, compareNotice }: { count: number; compare
         <Link to="/catalogue" onClick={() => setMobileOpen(false)}>Catalogue</Link><Link to="/categories/smartphones" onClick={() => setMobileOpen(false)}>Smartphones</Link><Link to="/categories/ordinateurs" onClick={() => setMobileOpen(false)}>Ordinateurs</Link><Link to="/categories/tablettes" onClick={() => setMobileOpen(false)}>Tablettes</Link><Link to="/categories/accessoires" onClick={() => setMobileOpen(false)}>Accessoires</Link><Link to="/marques" onClick={() => setMobileOpen(false)}>Marques</Link><a href="/#magasin" onClick={() => setMobileOpen(false)}>Le magasin</a>
       </nav>
       <div className="nav-tools"><button className="icon-button" aria-label="Ouvrir la recherche" onClick={() => setSearchOpen(!searchOpen)}><Search size={19}/></button><Link to="/comparateur" className="icon-button compare-trigger" aria-label={`Comparateur, ${compareCount} produits`}><GitCompareArrows size={18}/>{compareCount > 0 && <span>{compareCount}</span>}</Link><Link to="/panier" className="icon-button cart-trigger" aria-label={`Panier, ${count} articles`}><ShoppingBag size={19}/><span>{count}</span></Link>
-        {clerkEnabled ? <><SignedOut><SignInButton mode="modal"><button className="account-link">Compte</button></SignInButton></SignedOut><SignedIn><UserButton afterSignOutUrl="/"/></SignedIn></> : <span className="account-placeholder">Espace client</span>}
+        <Link to="/compte" className="account-link">Compte</Link>
         <button className="mobile-toggle" aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'} onClick={() => setMobileOpen(!mobileOpen)}>{mobileOpen ? <X/> : <Menu/>}</button>
       </div></div>
       {compareNotice && <div className="compare-feedback" role="status" aria-live="polite">{compareNotice}</div>}{searchOpen && <div className="search-panel"><form className="container search-form" onSubmit={submitSearch}><Search size={19}/><input autoFocus value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un appareil, une marque…"/><button className="button button-dark" type="submit">Rechercher</button><button className="icon-button" type="button" aria-label="Fermer" onClick={() => setSearchOpen(false)}><X/></button></form></div>}
@@ -126,8 +125,16 @@ function CheckoutContent() {
 }
 
 function Checkout() {
-  if (!clerkEnabled) return <CheckoutContent/>;
-  return <><SignedOut><main className="page-shell container"><Breadcrumbs items={[{ label: 'Panier', to: '/panier' }, { label: 'Connexion' }]}/><div className="auth-page"><Eyebrow>Commande CTRL-TECH</Eyebrow><h1>Connectez-vous pour continuer.</h1><p>Un compte client est obligatoire avant la finalisation de la commande. Votre panier est conservé pendant la connexion.</p><SignInButton mode="modal"><button className="button button-dark">Se connecter <ArrowRight size={16}/></button></SignInButton></div></main></SignedOut><SignedIn><CheckoutContent/></SignedIn></>;
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  useEffect(() => {
+    let active = true;
+    if (!authClient) { setAuthenticated(false); return; }
+    authClient.getSession().then(({ data }) => { if (active) setAuthenticated(Boolean(data?.user)); }).catch(() => { if (active) setAuthenticated(false); });
+    return () => { active = false; };
+  }, []);
+  if (authenticated === null) return <main className="page-shell container"><div className="empty-state">Vérification de votre session…</div></main>;
+  if (!authenticated) return <main className="page-shell container"><Breadcrumbs items={[{ label: 'Panier', to: '/panier' }, { label: 'Connexion' }]}/><div className="auth-page"><Eyebrow>Commande CTRL-TECH</Eyebrow><h1>Connectez-vous pour continuer.</h1><p>Un compte client est obligatoire avant la finalisation de la commande. Votre panier est conservé pendant la connexion.</p><Link to="/connexion?redirect=/checkout" className="button button-dark">Se connecter <ArrowRight size={16}/></Link></div></main>;
+  return <CheckoutContent/>;
 }
 
 function OrderStatus({ tracking = false }: { tracking?: boolean }) {
@@ -136,7 +143,7 @@ function OrderStatus({ tracking = false }: { tracking?: boolean }) {
 }
 
 function AdminLanding() {
-  return <main className="page-shell container"><Breadcrumbs items={[{ label: 'Espace professionnel' }]}/><div className="status-page admin-landing"><Eyebrow>CTRL-TECH / Gestion</Eyebrow><h1>Espace <em>professionnel.</em></h1><p>Le back-office est prévu dans l’architecture du projet, mais ses modules et ses permissions ne sont pas encore activés. Aucun tableau de bord fictif ne sera affiché.</p>{clerkEnabled ? <><SignedOut><SignInButton mode="modal"><button className="button button-dark">Connexion</button></SignInButton></SignedOut><SignedIn><p>Session ouverte. L’accès aux fonctions de gestion nécessite encore une autorisation de rôle côté serveur.</p><UserButton/></SignedIn></> : <p className="catalogue-note"><CircleHelp size={15}/> Le fournisseur d’identité n’est pas configuré dans cet environnement.</p>}</div></main>;
+  return <main className="page-shell container"><Breadcrumbs items={[{ label: 'Espace professionnel' }]}/><div className="status-page admin-landing"><Eyebrow>CTRL-TECH / Gestion</Eyebrow><h1>Espace <em>professionnel.</em></h1><p>Le back-office est prévu dans l’architecture du projet, mais ses modules et ses permissions ne sont pas encore activés. Aucun tableau de bord fictif ne sera affiché.</p><p className="catalogue-note"><CircleHelp size={15}/> L'accès sera activé après mise en place des rôles et des contrôles d'autorisation côté API.</p><Link to="/connexion" className="button button-dark">Connexion administrateur</Link></div></main>;
 }
 
 
@@ -150,11 +157,61 @@ function CategoryLanding({ onAdd, onCompare }: { onAdd: (p: Product) => void; on
 }
 
 function AuthPage({ signup = false }: { signup?: boolean }) {
-  return <main className="page-shell container"><Breadcrumbs items={[{ label: signup ? 'Créer un compte' : 'Connexion' }]}/><div className="auth-page"><Eyebrow>Espace client CTRL-TECH</Eyebrow><h1>{signup ? 'Créer votre compte.' : 'Ravi de vous retrouver.'}</h1><p>Un compte client est nécessaire pour finaliser une commande et retrouver votre historique.</p>{!clerkEnabled ? <div className="catalogue-note"><CircleHelp size={16}/> L’authentification n’est pas encore configurée sur cet environnement.</div> : <><SignedOut>{signup ? <SignUpButton mode="modal"><button className="button button-signal">Créer mon compte <ArrowRight size={16}/></button></SignUpButton> : <SignInButton mode="modal"><button className="button button-dark">Se connecter <ArrowRight size={16}/></button></SignInButton>}</SignedOut><SignedIn><p>Vous êtes déjà connecté.</p><Link to="/compte" className="button button-dark">Accéder à mon compte</Link></SignedIn></>}</div></main>;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!authClient) { setError("L'authentification n'est pas configurée dans cet environnement."); return; }
+    setPending(true); setError(''); setMessage('');
+    try {
+      if (signup) {
+        const result = await authClient.signUp.email({ name: name.trim(), email: email.trim(), password });
+        if (result.error) throw new Error(result.error.message || "Impossible de créer le compte.");
+        setMessage("Votre demande d'inscription est enregistrée. Consultez votre boîte e-mail pour vérifier votre adresse avant de vous connecter.");
+      } else {
+        const result = await authClient.signIn.email({ email: email.trim(), password });
+        if (result.error) throw new Error(result.error.message || "Identifiants incorrects.");
+        navigate('/compte');
+      }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Une erreur est survenue. Réessayez.");
+    } finally { setPending(false); }
+  };
+  return <main className="page-shell container"><Breadcrumbs items={[{ label: signup ? 'Créer un compte' : 'Connexion' }]}/><div className="auth-page"><Eyebrow>Espace client CTRL-TECH</Eyebrow><h1>{signup ? 'Créer votre compte.' : 'Ravi de vous retrouver.'}</h1><p>Un compte client est nécessaire pour finaliser une commande et retrouver votre historique.</p>
+    {!authClient ? <div className="catalogue-note"><CircleHelp size={16}/> L'URL Neon Auth doit être configurée pour activer la connexion.</div> : <form className="auth-form" onSubmit={submit}>
+      {signup && <label>Nom complet<input required autoComplete="name" value={name} onChange={e => setName(e.target.value)} placeholder="Votre nom"/></label>}
+      <label>Adresse e-mail<input required type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="nom@exemple.com"/></label>
+      <label>Mot de passe<input required minLength={8} type="password" autoComplete={signup ? 'new-password' : 'current-password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum"/></label>
+      {error && <p className="form-error" role="alert">{error}</p>}
+      {message && <p className="form-success" role="status">{message}</p>}
+      <button disabled={pending} className={signup ? 'button button-signal' : 'button button-dark'} type="submit">{pending ? 'Veuillez patienter…' : signup ? 'Créer mon compte' : 'Se connecter'} <ArrowRight size={16}/></button>
+    </form>}
+    <p className="auth-switch">{signup ? 'Vous avez déjà un compte ?' : 'Vous découvrez CTRL-TECH ?'} <Link to={signup ? '/connexion' : '/inscription'}>{signup ? 'Se connecter' : 'Créer un compte'}</Link></p>
+  </div></main>;
 }
 
 function AccountPage() {
-  return <main className="page-shell container"><Breadcrumbs items={[{ label: 'Mon compte' }]}/><div className="page-heading"><div><Eyebrow>Espace personnel</Eyebrow><h1>Mon <em>compte.</em></h1><p>Retrouvez vos informations et votre activité CTRL-TECH.</p></div></div>{!clerkEnabled ? <div className="empty-state"><CircleHelp size={28}/><h2>Compte client indisponible</h2><p>Le fournisseur d’authentification doit être configuré avant l’activation de l’espace client.</p><Link to="/connexion" className="button button-dark">Retour à la connexion</Link></div> : <><SignedOut><div className="empty-state"><h2>Connectez-vous pour continuer</h2><SignInButton mode="modal"><button className="button button-dark">Se connecter</button></SignInButton></div></SignedOut><SignedIn><div className="account-shell"><aside><b>Mon espace</b><Link to="/compte">Vue d’ensemble</Link><Link to="/compte/commandes">Mes commandes</Link><Link to="/compte/profil">Mes informations</Link><span>Sécurité du compte</span><UserButton afterSignOutUrl="/"/></aside><section><Eyebrow>Vue d’ensemble</Eyebrow><h2>Bienvenue dans votre espace.</h2><p>Votre compte est connecté. L’historique des commandes et la gestion du profil seront affichés lorsque les services correspondants seront activés.</p><div className="account-empty"><ShoppingBag/><b>Aucune commande à afficher</b><small>Les commandes confirmées apparaîtront ici.</small><Link to="/catalogue" className="text-action">Découvrir le catalogue <ArrowRight size={15}/></Link></div></section></div></SignedIn></>}</main>;
+  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let active = true;
+    if (!authClient) { setLoading(false); return; }
+    authClient.getSession().then(({ data }) => { if (active) setUser(data?.user ? { name: data.user.name, email: data.user.email } : null); })
+      .catch(() => { if (active) setError("Impossible de vérifier votre session."); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+  const signOut = async () => { if (!authClient) return; await authClient.signOut(); setUser(null); };
+  return <main className="page-shell container"><Breadcrumbs items={[{ label: 'Mon compte' }]}/><div className="page-heading"><div><Eyebrow>Espace personnel</Eyebrow><h1>Mon <em>compte.</em></h1><p>Retrouvez vos informations et votre activité CTRL-TECH.</p></div></div>
+    {loading ? <div className="empty-state">Vérification de votre session…</div> : error ? <div className="empty-state"><p>{error}</p><button className="button button-dark" onClick={() => window.location.reload()}>Réessayer</button></div> : !user ? <div className="empty-state"><CircleHelp size={28}/><h2>Connectez-vous pour continuer</h2><p>Votre compte est nécessaire pour accéder à votre espace personnel.</p><Link to="/connexion" className="button button-dark">Se connecter</Link></div> :
+    <div className="account-shell"><aside><b>Mon espace</b><Link to="/compte">Vue d’ensemble</Link><Link to="/compte/commandes">Mes commandes</Link><Link to="/compte/profil">Mes informations</Link><span>Sécurité du compte</span><button className="button button-dark" onClick={signOut}>Se déconnecter</button></aside><section><Eyebrow>Vue d’ensemble</Eyebrow><h2>Bienvenue{user.name ? `, ${user.name}` : ''}.</h2><p>Vous êtes connecté avec l'adresse {user.email}. L’historique des commandes sera affiché lorsque le traitement des commandes sera activé.</p><div className="account-empty"><ShoppingBag/><b>Aucune commande à afficher</b><small>Les commandes confirmées apparaîtront ici.</small><Link to="/catalogue" className="text-action">Découvrir le catalogue <ArrowRight size={15}/></Link></div></section></div>}
+  </main>;
 }
 
 function InfoPage({ type }: { type: string }) {

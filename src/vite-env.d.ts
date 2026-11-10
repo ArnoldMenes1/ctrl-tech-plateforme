@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_CLERK_PUBLISHABLE_KEY?: string;
+  readonly VITE_NEON_AUTH_URL?: string;
 }
 
 interface ImportMeta {

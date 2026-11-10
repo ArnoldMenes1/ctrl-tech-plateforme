@@ -160,6 +160,8 @@ function AuthPage({ signup = false }: { signup?: boolean }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [otp, setOtp] = useState('');
+  const [verificationPending, setVerificationPending] = useState(false);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -172,7 +174,8 @@ function AuthPage({ signup = false }: { signup?: boolean }) {
       if (signup) {
         const result = await authClient.signUp.email({ name: name.trim(), email: email.trim(), password });
         if (result.error) throw new Error(result.error.message || "Impossible de créer le compte.");
-        setMessage("Votre demande d'inscription est enregistrée. Consultez votre boîte e-mail pour vérifier votre adresse avant de vous connecter.");
+        setVerificationPending(true);
+        setMessage("Un code de vérification a été envoyé à votre adresse e-mail.");
       } else {
         const result = await authClient.signIn.email({ email: email.trim(), password });
         if (result.error) throw new Error(result.error.message || "Identifiants incorrects.");
@@ -182,8 +185,37 @@ function AuthPage({ signup = false }: { signup?: boolean }) {
       setError(cause instanceof Error ? cause.message : "Une erreur est survenue. Réessayez.");
     } finally { setPending(false); }
   };
+  const verifyEmail = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!authClient) return;
+    setPending(true); setError(''); setMessage('');
+    try {
+      const result = await authClient.emailOtp.verifyEmail({ email: email.trim(), otp: otp.trim() });
+      if (result.error) throw new Error(result.error.message || "Code de vérification invalide.");
+      navigate('/compte');
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Impossible de vérifier le code.");
+    } finally { setPending(false); }
+  };
+  const resendCode = async () => {
+    if (!authClient) return;
+    setPending(true); setError(''); setMessage('');
+    try {
+      const result = await authClient.emailOtp.sendVerificationOtp({ email: email.trim(), type: 'email-verification' });
+      if (result.error) throw new Error(result.error.message || "Impossible de renvoyer le code.");
+      setMessage("Un nouveau code a été envoyé.");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Impossible de renvoyer le code.");
+    } finally { setPending(false); }
+  };
   return <main className="page-shell container"><Breadcrumbs items={[{ label: signup ? 'Créer un compte' : 'Connexion' }]}/><div className="auth-page"><Eyebrow>Espace client CTRL-TECH</Eyebrow><h1>{signup ? 'Créer votre compte.' : 'Ravi de vous retrouver.'}</h1><p>Un compte client est nécessaire pour finaliser une commande et retrouver votre historique.</p>
-    {!authClient ? <div className="catalogue-note"><CircleHelp size={16}/> L'URL Neon Auth doit être configurée pour activer la connexion.</div> : <form className="auth-form" onSubmit={submit}>
+    {!authClient ? <div className="catalogue-note"><CircleHelp size={16}/> L'URL Neon Auth doit être configurée pour activer la connexion.</div> : verificationPending ? <form className="auth-form" onSubmit={verifyEmail}>
+      <label>Code de vérification<input required inputMode="numeric" autoComplete="one-time-code" value={otp} onChange={e => setOtp(e.target.value)} placeholder="Saisissez le code reçu"/></label>
+      {error && <p className="form-error" role="alert">{error}</p>}
+      {message && <p className="form-success" role="status">{message}</p>}
+      <button disabled={pending} className="button button-signal" type="submit">{pending ? 'Vérification…' : 'Vérifier mon adresse'} <ArrowRight size={16}/></button>
+      <button disabled={pending} className="filter-reset" type="button" onClick={resendCode}>Renvoyer le code</button>
+    </form> : <form className="auth-form" onSubmit={submit}>
       {signup && <label>Nom complet<input required autoComplete="name" value={name} onChange={e => setName(e.target.value)} placeholder="Votre nom"/></label>}
       <label>Adresse e-mail<input required type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="nom@exemple.com"/></label>
       <label>Mot de passe<input required minLength={8} type="password" autoComplete={signup ? 'new-password' : 'current-password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum"/></label>
@@ -191,7 +223,7 @@ function AuthPage({ signup = false }: { signup?: boolean }) {
       {message && <p className="form-success" role="status">{message}</p>}
       <button disabled={pending} className={signup ? 'button button-signal' : 'button button-dark'} type="submit">{pending ? 'Veuillez patienter…' : signup ? 'Créer mon compte' : 'Se connecter'} <ArrowRight size={16}/></button>
     </form>}
-    <p className="auth-switch">{signup ? 'Vous avez déjà un compte ?' : 'Vous découvrez CTRL-TECH ?'} <Link to={signup ? '/connexion' : '/inscription'}>{signup ? 'Se connecter' : 'Créer un compte'}</Link></p>
+    {!verificationPending && <p className="auth-switch">{signup ? 'Vous avez déjà un compte ?' : 'Vous découvrez CTRL-TECH ?'} <Link to={signup ? '/connexion' : '/inscription'}>{signup ? 'Se connecter' : 'Créer un compte'}</Link></p>}
   </div></main>;
 }
 

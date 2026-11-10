@@ -28,9 +28,16 @@
 - Le socle CSS inclut les tokens d'espacement, les ajustements responsive, les états de focus clavier et `prefers-reduced-motion`.
 - Les vues présentes dans ce frontend sont l'accueil, le catalogue, la fiche produit, le panier et les états 404. Le back-office n'est pas encore implémenté dans cette branche.
 
+## Authentification et stockage
+
+- Authentification : Neon Managed Better Auth (`@neondatabase/auth`), sans serveur Better Auth auto-hébergé dans l'application.
+- La branche Neon `development` possède son propre endpoint Auth ; ne pas utiliser l'URL `production` pour les previews.
+- Stockage objet : bucket privé Neon `assets`. Les fichiers privés ne doivent jamais être servis directement depuis le navigateur avec des identifiants S3 ; les uploads/téléchargements passeront par des URL présignées ou l'API serveur.
+- Les images de marque et le favicon fournis sont servis depuis `public/brand` et `public/`.
+
 ## Architecture cible à compléter
 
-Le frontend ne se connecte jamais directement à PostgreSQL. Les endpoints métier seront ajoutés sous `api/` et utiliseront Neon/Drizzle côté serveur. Clerk sera intégré après configuration des clés et des domaines autorisés. Les fonctions checkout et back-office restent désactivées tant que les règles commerciales et les environnements ne sont pas validés.
+Le frontend ne se connecte jamais directement à PostgreSQL. Les endpoints métier seront ajoutés sous `api/` et utiliseront Neon/Drizzle côté serveur. Neon Managed Better Auth est utilisé pour l'inscription, la connexion et les sessions. Configurez `VITE_NEON_AUTH_URL` avec l'URL de la branche Neon visée. Les fonctions checkout et back-office restent désactivées tant que les règles commerciales et les environnements ne sont pas validés.
 
 ## Variables d'environnement
 

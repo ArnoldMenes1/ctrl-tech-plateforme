@@ -566,24 +566,26 @@ Les versions validées sont taguées dans Git et décrites dans GitHub Releases.
 
 ## 17. État du projet
 
-**Statut :** frontend storefront refondu selon Precision Retail V2 — intégrations, QA visuelle et validation métier à poursuivre.
+**Statut :** première version du storefront déposée sur une branche de fonctionnalité ; preview Vercel et intégrations finales encore à valider.
 
 - [x] Dépôt GitHub identifié et backlog Scrum documenté.
-- [x] Stack cible et architecture logique définies.
-- [x] React + TypeScript + Vite initialisés sur `feat/storefront-foundation`.
-- [x] Shell public responsive, accueil éditorial, catalogue filtrable, catégories, marques, fiches produit, comparateur, panier et pages institutionnelles.
-- [x] Contrôles qualité CI présents ; le dernier passage doit être confirmé après la refonte.
-- [x] Endpoint technique `/api/health` ajouté.
-- [x] Catalogue initial repris du document fourni, avec prix indicatifs et sans disponibilité affirmée.
-- [ ] Validation métier CTRL-TECH (références, prix, stock, garanties, paiements, livraison et retours).
-- [x] Projet Vercel `ctrl-tech-plateforme` lié au bon dépôt ; une Preview intermédiaire est prête. La dernière Preview attend le renouvellement de la limite quotidienne Vercel.
-- [x] Projet Neon créé (région AWS Europe West 2) avec branches `main` et `development`.
-- [x] Schéma catalogue initial appliqué sur `development`.
-- [ ] Migrations Drizzle automatisées et branche Preview isolée à finaliser.
-- [ ] Clés Neon Managed Better Auth et vérification de session côté serveur ; provider frontend déjà préparé.
-- [ ] API métier, checkout sécurisé et back-office.
+- [x] Structure des pages et design system documentés.
+- [x] Première version React + TypeScript + Vite sur `feat/storefront-foundation`.
+- [x] Accueil éditorial, catalogue filtrable, catégories, marques, fiches produit, comparateur, panier, espace client et pages institutionnelles.
+- [x] Logo CTRL-TECH, icône de marque et favicon du dépôt utilisés.
+- [x] Palette Precision Retail, typographies, grilles, espacements, responsive, focus clavier et réduction des animations intégrés.
+- [x] Neon Managed Better Auth provisionné sur les branches Neon `production` et `development`.
+- [x] Client frontend `@neondatabase/auth`, connexion, inscription, code de vérification et session préparés.
+- [x] Bucket Neon Object Storage privé `assets` disponible sur les branches.
+- [x] Projet Vercel `ctrl-tech-platform` créé dans l'équipe ; configuration Vite, Node.js 22 et variable publique Neon Auth Preview ajoutées.
+- [ ] Connexion du dépôt GitHub au projet Vercel : la Login Connection GitHub de Vercel doit être activée.
+- [ ] Premier déploiement Preview et ajout de son origine à la liste des domaines de confiance Neon Auth.
+- [ ] Vérification du workflow CI sur le dernier commit.
+- [ ] Migration du schéma catalogue vers Neon `development` ; aucune table métier n'a encore été confirmée dans cette branche.
+- [ ] API métier, upload sécurisé vers le bucket, checkout, commandes et back-office.
+- [ ] Validation métier CTRL-TECH : produits réels, prix, stock, garanties, paiements, livraison et retours.
 - [ ] Tests E2E, recette et préparation Production.
 
-**Limites actuelles :** le panier et le comparateur sont locaux au navigateur. Les visuels sont temporaires. Checkout, confirmation réelle, suivi, modules opérationnels du back-office, stock et paiements ne sont pas activés. Les coordonnées, garanties et modalités de livraison restent à valider.
+**Limites actuelles :** le catalogue visible est un jeu de données de démonstration et ses prix sont indicatifs. Le panier et le comparateur sont conservés localement dans le navigateur. Les visuels produits sont temporaires. Le checkout, les paiements, les commandes, le suivi réel et les modules opérationnels du back-office ne sont pas activés. Les coordonnées, garanties et modalités de livraison restent à valider.
 
 **Règle de progression :** avancer phase par phase, vérifier le résultat réel après chaque étape et ne déclarer une tâche terminée que lorsque le changement est présent dans le dépôt ou l'environnement concerné et a été vérifié.
